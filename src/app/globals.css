@@ -63,12 +63,12 @@
   --border: oklch(0.929 0.013 255.508);
   --input: oklch(0.929 0.013 255.508);
   --ring: oklch(0.704 0.04 256.788);
-  --mono-chart-1: #F8F9FA;
-  --mono-chart-2: #E9ECEF;
-  --mono-chart-3: #DEE2E6;
-  --mono-chart-4: #CED4DA;
-  --mono-chart-5: #ADB5BD;
-  --mono-chart-6: #6C757D;
+  --mono-chart-1: #f8f9fa;
+  --mono-chart-2: #e9ecef;
+  --mono-chart-3: #dee2e6;
+  --mono-chart-4: #ced4da;
+  --mono-chart-5: #adb5bd;
+  --mono-chart-6: #6c757d;
   --mono-chart-7: #495057;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
