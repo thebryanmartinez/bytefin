@@ -83,9 +83,12 @@ export const BalanceChart = ({ chartDatas }: BalanceChartProps) => {
                       <tspan
                         x={viewBox.cx}
                         y={viewBox.cy}
-                        className="fill-foreground text-2xl font-bold"
+                        className="fill-foreground text-lg font-bold"
                       >
-                        {totalVisitors.toLocaleString()}$
+                        {totalVisitors.toLocaleString("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                        })}
                       </tspan>
                     </text>
                   );
