@@ -14,11 +14,11 @@ interface BalanceChartProps {
 }
 
 const chartData = [
-    {section: "chrome", balance: 275, fill: "var(--color-chrome)"},
-    {section: "safari", balance: 200, fill: "var(--color-safari)"},
-    {section: "firefox", balance: 287, fill: "var(--color-firefox)"},
-    {section: "edge", balance: 173, fill: "var(--color-edge)"},
-    {section: "other", balance: 190, fill: "var(--color-other)"},
+    {funds: "chrome", balance: 275, fill: "var(--color-chrome)"},
+    {funds: "safari", balance: 200, fill: "var(--color-safari)"},
+    {funds: "firefox", balance: 287, fill: "var(--color-firefox)"},
+    {funds: "edge", balance: 173, fill: "var(--color-edge)"},
+    {funds: "other", balance: 190, fill: "var(--color-other)"},
 ]
 
 const chartConfig = {
@@ -66,7 +66,7 @@ export const BalanceChart = ({chartDatas}: BalanceChartProps) => {
                 <Pie
                     data={chartData}
                     dataKey="balance"
-                    nameKey="section"
+                    nameKey="funds"
                     innerRadius={60}
                     strokeWidth={5}
                 >
@@ -85,7 +85,7 @@ export const BalanceChart = ({chartDatas}: BalanceChartProps) => {
                                             y={viewBox.cy}
                                             className="fill-foreground text-2xl font-bold"
                                         >
-                                            {totalVisitors.toLocaleString()}
+                                            {totalVisitors.toLocaleString()}$
                                         </tspan>
                                     </text>
                                 )
