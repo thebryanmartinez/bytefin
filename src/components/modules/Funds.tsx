@@ -1,7 +1,8 @@
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Card, CardContent} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
-import {Plus, Trash2} from "lucide-react";
+import {Trash2} from "lucide-react";
 import AddFundDialog from "@/components/modules/AddFundDialog";
+import AddTransactionDialog from "@/components/modules/AddTransactionDialog";
 
 interface FundsProps {
     funds: Funds[];
@@ -41,18 +42,13 @@ export const Funds = ({funds}: FundsProps) => {
                                     <Button
                                         variant="outline"
                                         size='sm'
+                                        // TODO: Add delete fund functionality
                                         // onClick={() => handleDeleteSection(fund.id)}
                                     >
                                         <Trash2 className='w-3 h-3'/>
                                     </Button>
-                                    <Button
-                                        variant="outline"
-                                        size='sm'
-                                        // onClick={() => openAddTransactionModal(section.id)}
-                                    >
-                                        <Plus className='w-3 h-3 mr-1'/>
-                                        Add
-                                    </Button>
+                                    {/*TODO: Add 'id' prop functionality*/}
+                                    <AddTransactionDialog id="1" />
                                 </div>
                             </div>
 

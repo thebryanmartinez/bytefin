@@ -8,16 +8,10 @@ import {Input} from "@/components/ui/input";
 
 export const AddFundDialog = () => {
 
-    const [isAddFundSectionOpen, setIsAddFundSectionOpen] = useState(false);
+    const [isOpen, setisOpen] = useState(false);
     const [fundName, setFundName] = useState("");
 
-    const openDialog = () => {
-        setIsAddFundSectionOpen(true);
-    }
-
-    const closeDialog = () => {
-        setIsAddFundSectionOpen(false);
-    }
+    const closeDialog = () => setisOpen(false);
 
     const handleAddFund = (fundName:string) => {
         // TODO: Add functionality for adding fund
@@ -26,11 +20,11 @@ export const AddFundDialog = () => {
     return (
         <div>
             <Dialog
-                open={isAddFundSectionOpen}
-                onOpenChange={setIsAddFundSectionOpen}
+                open={isOpen}
+                onOpenChange={setisOpen}
             >
                 <DialogTrigger asChild>
-                    <Button  variant='default' onClick={openDialog}>
+                    <Button variant='default'>
                         Add Fund
                     </Button>
                 </DialogTrigger>

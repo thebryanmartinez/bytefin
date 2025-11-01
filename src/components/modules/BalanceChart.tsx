@@ -53,7 +53,7 @@ export const BalanceChart = ({chartDatas}: BalanceChartProps) => {
     }, [])
 
     return (
-        <div className="w-full ">
+        <section className="w-full ">
         <ChartContainer
             config={chartConfig}
             className="mx-auto aspect-square max-h-[250px]"
@@ -95,6 +95,6 @@ export const BalanceChart = ({chartDatas}: BalanceChartProps) => {
                 </Pie>
             </PieChart>
         </ChartContainer>
-        </div>
+        </section>
     )
 }
