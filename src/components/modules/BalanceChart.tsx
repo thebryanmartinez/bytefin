@@ -22,6 +22,7 @@ const COLORS = [
   "var(--mono-chart-5)",
   "var(--mono-chart-6)",
   "var(--mono-chart-7)",
+  "var(--mono-chart-8)",
 ];
 
 export const BalanceChart = ({ account }: BalanceChartProps) => {
