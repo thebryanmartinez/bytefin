@@ -1,13 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Label, Pie, PieChart } from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Account } from "@/lib";
+import type { Account } from "@/lib";
+import EmptyState from "@/components/modules/EmptyState";
+import { PieChart as PieChartIcon } from "lucide-react";
 
 interface BalanceChartProps {
   account: Account;
@@ -33,7 +34,17 @@ export const BalanceChart = ({ account }: BalanceChartProps) => {
   return (
     <section className="w-full ">
       {account.funds.length === 0 ? (
-        <>No data</>
+        <EmptyState
+          icon={PieChartIcon}
+          title="No funds yet"
+          description="Add your first fund to see your balance distribution"
+        />
+      ) : account.totalBalance === 0 ? (
+        <EmptyState
+          icon={PieChartIcon}
+          title="No transactions yet"
+          description="Add your first transaction to see your balance distribution"
+        />
       ) : (
         <ChartContainer
           className="mx-auto aspect-square max-h-[250px]"

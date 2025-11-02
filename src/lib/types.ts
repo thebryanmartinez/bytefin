@@ -1,5 +1,5 @@
 export interface Transaction {
-  id: number;
+  id: string;
   amount: number;
   description: string;
   date: string;
@@ -7,7 +7,7 @@ export interface Transaction {
 }
 
 export interface Fund {
-  id: number;
+  id: string;
   name: string;
   transactions: Transaction[];
   total: number;
@@ -15,7 +15,7 @@ export interface Fund {
 }
 
 export interface Account {
-  id: number;
+  id: string;
   name: string;
   funds: Fund[];
   totalBalance: number;
