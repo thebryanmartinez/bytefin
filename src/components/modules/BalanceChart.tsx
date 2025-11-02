@@ -1,27 +1,27 @@
 "use client";
 
+import { PieChart as PieChartIcon } from "lucide-react";
 import { Label, Pie, PieChart } from "recharts";
+import EmptyState from "@/components/modules/EmptyState";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import type { Account } from "@/lib";
-import EmptyState from "@/components/modules/EmptyState";
-import { PieChart as PieChartIcon } from "lucide-react";
 
 interface BalanceChartProps {
   account: Account;
 }
 
 const COLORS = [
-  "#f8f9fa",
-  "#e9ecef",
-  "#dee2e6",
-  "#ced4da",
-  "#adb5bd",
-  "#6c757d",
-  "#495057",
+  "var(--mono-chart-1)",
+  "var(--mono-chart-2)",
+  "var(--mono-chart-3)",
+  "var(--mono-chart-4)",
+  "var(--mono-chart-5)",
+  "var(--mono-chart-6)",
+  "var(--mono-chart-7)",
 ];
 
 export const BalanceChart = ({ account }: BalanceChartProps) => {
