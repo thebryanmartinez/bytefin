@@ -3,24 +3,27 @@ import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 import AddFundDialog from "@/components/modules/AddFundDialog";
 import AddTransactionDialog from "@/components/modules/AddTransactionDialog";
+import { Fund } from "@/lib";
 
 interface FundsProps {
-  funds: Funds[];
+  funds: Fund[];
+  addFund: (name: string) => Promise<void>;
+  deleteFund: (fundId: string) => Promise<void>;
+  addTransaction: (fundId: string, amount: number, description: string) => Promise<void>;
 }
 
-interface Funds {
-  id: string;
-  name: string;
-  balance: number;
-}
+export const Funds = ({ funds, addFund, deleteFund, addTransaction }: FundsProps) => {
 
-export const Funds = ({ funds }: FundsProps) => {
+  const handleDeleteFund = async (fundId: string) => {
+    await deleteFund(fundId);
+  };
+
   return (
     <section className="space-y-4">
       <div>
         <div className="flex w-full justify-between items-center pb-1">
           <h2 className="text-lg font-bold ">Funds</h2>
-          <AddFundDialog />
+          <AddFundDialog addFund={addFund} />
         </div>
         <hr />
       </div>
@@ -33,7 +36,7 @@ export const Funds = ({ funds }: FundsProps) => {
                   <div className="flex flex-col justify-between">
                     <span className="text-base font-semibold">{fund.name}</span>
                     <span className="text-sm text-gray-500">
-                      ${fund.balance.toFixed(2)}
+                      ${fund.total.toFixed(2)}
                     </span>
                   </div>
 
@@ -41,13 +44,15 @@ export const Funds = ({ funds }: FundsProps) => {
                     <Button
                       variant="outline"
                       size="sm"
-                      // TODO: Add delete fund functionality
-                      // onClick={() => handleDeleteSection(fund.id)}
+                      onClick={() => handleDeleteFund(fund.id)}
                     >
                       <Trash2 className="w-3 h-3" />
                     </Button>
                     {/*TODO: Add 'id' prop functionality*/}
-                    <AddTransactionDialog id="1" />
+                    <AddTransactionDialog
+                      id={fund.id}
+                      addTransaction={addTransaction}
+                    />
                   </div>
                 </div>
               </CardContent>

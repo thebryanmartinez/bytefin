@@ -15,19 +15,31 @@ import { Plus } from "lucide-react";
 
 interface AddTransactionDialogProps {
   id: string;
+  addTransaction: (
+    fundId: string,
+    amount: number,
+    description: string,
+  ) => Promise<void>;
 }
 
-export const AddTransactionDialog = ({ id }: AddTransactionDialogProps) => {
+export const AddTransactionDialog = ({
+  id,
+  addTransaction,
+}: AddTransactionDialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
 
-  const handleAddTransaction = (
+  const handleAddTransaction = async (
     id: string,
-    amount: string | number,
+    amount: number,
     description: string,
   ) => {
-    // TODO: Add functionality
+    if (!description.trim() || isNaN(amount)) return;
+    await addTransaction(id, amount, description);
+    setAmount("");
+    setDescription("");
+    closeDialog();
   };
 
   const closeDialog = () => setIsOpen(false);

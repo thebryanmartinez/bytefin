@@ -1,103 +1,89 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { Label, Pie, PieChart } from "recharts";
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { Account } from "@/lib";
 
 interface BalanceChartProps {
-  chartDatas: ChartConfig;
+  account: Account;
 }
 
-const chartData = [
-  { funds: "chrome", balance: 275, fill: "var(--color-chrome)" },
-  { funds: "safari", balance: 200, fill: "var(--color-safari)" },
-  { funds: "firefox", balance: 287, fill: "var(--color-firefox)" },
-  { funds: "edge", balance: 173, fill: "var(--color-edge)" },
-  { funds: "other", balance: 190, fill: "var(--color-other)" },
+const COLORS = [
+  "#f8f9fa",
+  "#e9ecef",
+  "#dee2e6",
+  "#ced4da",
+  "#adb5bd",
+  "#6c757d",
+  "#495057",
 ];
 
-const chartConfig = {
-  visitors: {
-    label: "Balance",
-  },
-  chrome: {
-    label: "Chrome",
-    color: "var(--chart-1)",
-  },
-  safari: {
-    label: "Safari",
-    color: "var(--chart-2)",
-  },
-  firefox: {
-    label: "Firefox",
-    color: "var(--chart-3)",
-  },
-  edge: {
-    label: "Edge",
-    color: "var(--chart-4)",
-  },
-  other: {
-    label: "Other",
-    color: "var(--chart-5)",
-  },
-} satisfies ChartConfig;
-
-export const BalanceChart = ({ chartDatas }: BalanceChartProps) => {
-  const totalVisitors = useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.balance, 0);
-  }, []);
+export const BalanceChart = ({ account }: BalanceChartProps) => {
+  const chartData = account.funds.map((fund, index) => ({
+    name: fund.name,
+    value: fund.total,
+    fill: COLORS[index % COLORS.length],
+  }));
 
   return (
     <section className="w-full ">
-      <ChartContainer
-        config={chartConfig}
-        className="mx-auto aspect-square max-h-[250px]"
-      >
-        <PieChart>
-          <ChartTooltip
-            cursor={false}
-            content={<ChartTooltipContent hideLabel />}
-          />
-          <Pie
-            data={chartData}
-            dataKey="balance"
-            nameKey="funds"
-            innerRadius={60}
-            strokeWidth={5}
-          >
-            <Label
-              content={({ viewBox }) => {
-                if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                  return (
-                    <text
-                      x={viewBox.cx}
-                      y={viewBox.cy}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                    >
-                      <tspan
+      {account.funds.length === 0 ? (
+        <>No data</>
+      ) : (
+        <ChartContainer
+          className="mx-auto aspect-square max-h-[250px]"
+          config={{
+            value: {
+              label: "Amount",
+            },
+          }}
+        >
+          <PieChart>
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent hideLabel />}
+            />
+            <Pie
+              data={chartData}
+              dataKey="value"
+              nameKey="funds"
+              innerRadius={60}
+              strokeWidth={5}
+            >
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                    return (
+                      <text
                         x={viewBox.cx}
                         y={viewBox.cy}
-                        className="fill-foreground text-lg font-bold"
+                        textAnchor="middle"
+                        dominantBaseline="middle"
                       >
-                        {totalVisitors.toLocaleString("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                        })}
-                      </tspan>
-                    </text>
-                  );
-                }
-              }}
-            />
-          </Pie>
-        </PieChart>
-      </ChartContainer>
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className="fill-foreground text-lg font-bold"
+                        >
+                          {account.totalBalance.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          })}
+                        </tspan>
+                      </text>
+                    );
+                  }
+                }}
+              />
+            </Pie>
+          </PieChart>
+        </ChartContainer>
+      )}
     </section>
   );
 };

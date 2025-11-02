@@ -12,19 +12,22 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
-export const AddFundDialog = () => {
-  const [isOpen, setisOpen] = useState(false);
+export const AddFundDialog = ({ addFund }: { addFund: any }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [fundName, setFundName] = useState("");
 
-  const closeDialog = () => setisOpen(false);
+  const closeDialog = () => setIsOpen(false);
 
-  const handleAddFund = (fundName: string) => {
-    // TODO: Add functionality for adding fund
+  const handleAddFund = async (fundName: string) => {
+    if (!fundName.trim()) return;
+    await addFund(fundName);
+    setFundName("");
+    setIsOpen(false);
   };
 
   return (
     <div>
-      <Dialog open={isOpen} onOpenChange={setisOpen}>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button variant="default">Add Fund</Button>
         </DialogTrigger>
