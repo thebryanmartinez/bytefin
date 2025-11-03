@@ -49,21 +49,14 @@ export const BalanceChart = ({ account }: BalanceChartProps) => {
       ) : (
         <ChartContainer
           className="mx-auto aspect-square max-h-[250px]"
-          config={{
-            value: {
-              label: "Amount",
-            },
-          }}
+          config={{}}
         >
           <PieChart>
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent hideLabel />}
-            />
+            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Pie
               data={chartData}
               dataKey="value"
-              nameKey="funds"
+              nameKey="name"
               innerRadius={60}
               strokeWidth={5}
             >
