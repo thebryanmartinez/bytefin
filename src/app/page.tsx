@@ -1,7 +1,21 @@
 "use client";
 
+import { useEffect } from "react";
 import { BalanceChart, Funds, Header, Loading } from "@/components/modules";
 import { useDatabase } from "@/lib";
+
+export function RegisterServiceWorker() {
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then(() => console.log("Service Worker registered"))
+        .catch((err) => console.error("SW registration failed:", err));
+    }
+  }, []);
+
+  return null;
+}
 
 export default function Home() {
   const { account, isLoading, addFund, deleteFund, addTransaction } =

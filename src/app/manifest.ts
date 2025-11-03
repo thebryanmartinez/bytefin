@@ -6,9 +6,11 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "ByteFin",
     description: "A minimalist financial application",
     start_url: "/",
+    scope: "/",
     display: "standalone",
-    background_color: "#ffffff",
-    theme_color: "#000000",
+    background_color: "#020618",
+    theme_color: "#28559d",
+    categories: ["finance"],
     icons: [
       {
         src: "/icon-192x192.png",
@@ -21,9 +23,17 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/png",
       },
       {
-        src: "favicon-32x32.png",
+        src: "/favicon-32x32.png",
         sizes: "32x32",
         type: "image/png",
+      },
+    ],
+    screenshots: [
+      {
+        src: "app-screenshot.jpeg",
+        type: "image/png",
+        sizes: "1080x1920",
+        form_factor: "narrow",
       },
     ],
   };

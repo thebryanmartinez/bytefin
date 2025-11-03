@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
+import { RegisterServiceWorker } from "@/app/page";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,7 +33,7 @@ export default function RootLayout({
         <meta name="apple-mobile-web-app-title" content="ByteFin" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="manifest" href="manifest.ts" />
+        <link rel="manifest" href="/manifest.webmanifest" />
       </head>
 
       <body
@@ -45,6 +46,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
+          <RegisterServiceWorker />
         </ThemeProvider>
       </body>
     </html>
