@@ -3,7 +3,7 @@ export interface Transaction {
   amount: number;
   description: string;
   date: string;
-  fundId: number;
+  fundId: string;
 }
 
 export interface Fund {
@@ -11,7 +11,7 @@ export interface Fund {
   name: string;
   transactions: Transaction[];
   total: number;
-  accountId: number;
+  accountId: string;
 }
 
 export interface Account {
