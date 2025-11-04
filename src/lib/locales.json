@@ -35,12 +35,6 @@
     "noTransactionsYet": "No transactions yet",
     "noTransactionsDescription": "Add your first transaction to see your balance distribution"
   },
-  "themeToggle": {
-    "toggleTheme": "Toggle theme",
-    "light": "Light",
-    "dark": "Dark",
-    "system": "System"
-  },
   "serviceWorker": {
     "registrationSuccess": "Service Worker registered",
     "registrationFailed": "SW registration failed:"
