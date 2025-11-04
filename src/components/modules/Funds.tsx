@@ -4,7 +4,8 @@ import { Trash2, Wallet } from "lucide-react";
 import AddFundDialog from "@/components/modules/AddFundDialog";
 import AddTransactionDialog from "@/components/modules/AddTransactionDialog";
 import EmptyState from "@/components/modules/EmptyState";
-import { Fund } from "@/lib";
+import type { Fund } from "@/lib";
+import useLocalization from "@/lib/useLocalization";
 
 interface FundsProps {
   funds: Fund[];
@@ -23,6 +24,8 @@ export const Funds = ({
   deleteFund,
   addTransaction,
 }: FundsProps) => {
+  const { t } = useLocalization();
+
   const handleDeleteFund = async (fundId: string) => {
     await deleteFund(fundId);
   };
@@ -31,7 +34,7 @@ export const Funds = ({
     <section className="space-y-4">
       <div>
         <div className="flex w-full justify-between items-center pb-1">
-          <h2 className="text-lg font-bold ">Funds</h2>
+          <h2 className="text-lg font-bold ">{t("funds.title")}</h2>
           <AddFundDialog addFund={addFund} />
         </div>
         <hr />
@@ -40,8 +43,8 @@ export const Funds = ({
         {funds.length === 0 ? (
           <EmptyState
             icon={Wallet}
-            title="No funds yet"
-            description="Create your first fund to start tracking your finances"
+            title={t("funds.noFundsYet")}
+            description={t("funds.noFundsDescription")}
           />
         ) : (
           <div className="space-y-3">
@@ -69,6 +72,7 @@ export const Funds = ({
                       <AddTransactionDialog
                         id={fund.id}
                         addTransaction={addTransaction}
+                        t={t}
                       />
                     </div>
                   </div>

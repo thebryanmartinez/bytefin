@@ -9,6 +9,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import type { Account } from "@/lib";
+import useLocalization from "@/lib/useLocalization";
 
 interface BalanceChartProps {
   account: Account;
@@ -26,6 +27,8 @@ const COLORS = [
 ];
 
 export const BalanceChart = ({ account }: BalanceChartProps) => {
+  const { t } = useLocalization();
+
   const chartData = account.funds.map((fund, index) => ({
     name: fund.name,
     value: fund.total,
@@ -37,14 +40,14 @@ export const BalanceChart = ({ account }: BalanceChartProps) => {
       {account.funds.length === 0 ? (
         <EmptyState
           icon={PieChartIcon}
-          title="No funds yet"
-          description="Add your first fund to see your balance distribution"
+          title={t("balanceChart.noFundsYet")}
+          description={t("balanceChart.noFundsDescription")}
         />
       ) : account.totalBalance === 0 ? (
         <EmptyState
           icon={PieChartIcon}
-          title="No transactions yet"
-          description="Add your first transaction to see your balance distribution"
+          title={t("balanceChart.noTransactionsYet")}
+          description={t("balanceChart.noTransactionsDescription")}
         />
       ) : (
         <ChartContainer

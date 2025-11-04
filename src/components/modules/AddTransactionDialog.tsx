@@ -1,6 +1,8 @@
 "use client";
 
+import { Plus } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,10 +10,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import type { LocalizationKey } from "@/lib/useLocalization";
 
 interface AddTransactionDialogProps {
   id: string;
@@ -20,11 +21,13 @@ interface AddTransactionDialogProps {
     amount: number,
     description: string,
   ) => Promise<void>;
+  t: (key: LocalizationKey) => string;
 }
 
 export const AddTransactionDialog = ({
   id,
   addTransaction,
+  t,
 }: AddTransactionDialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [amount, setAmount] = useState("");
@@ -49,32 +52,34 @@ export const AddTransactionDialog = ({
       <DialogTrigger asChild>
         <Button variant="outline" size="sm">
           <Plus className="w-3 h-3 mr-1" />
-          Add
+          {t("common.add")}
         </Button>
       </DialogTrigger>
       <DialogContent className="mx-auto">
         <DialogHeader>
-          <DialogTitle>Add Transaction</DialogTitle>
+          <DialogTitle>{t("funds.addTransactionTitle")}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 pt-4">
           <div className="space-y-2">
-            <Label htmlFor="transaction-amount">Amount</Label>
+            <Label htmlFor="transaction-amount">{t("funds.amount")}</Label>
             <Input
               id="transaction-amount"
               type="number"
               step="0.01"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="100.00"
+              placeholder={t("funds.amountPlaceholder")}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="transaction-description">Description</Label>
+            <Label htmlFor="transaction-description">
+              {t("funds.description")}
+            </Label>
             <Input
               id="transaction-description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="September income"
+              placeholder={t("funds.descriptionPlaceholder")}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && id) {
                   handleAddTransaction(id, parseFloat(amount), description);
@@ -84,7 +89,7 @@ export const AddTransactionDialog = ({
           </div>
           <div className="flex justify-end space-x-2 pt-4">
             <Button variant="outline" onClick={closeDialog}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               onClick={() =>
@@ -92,7 +97,7 @@ export const AddTransactionDialog = ({
               }
               disabled={!amount || !description.trim()}
             >
-              Add Transaction
+              {t("funds.addTransaction")}
             </Button>
           </div>
         </div>

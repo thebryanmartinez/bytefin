@@ -3,16 +3,19 @@
 import { useEffect } from "react";
 import { BalanceChart, Funds, Header, Loading } from "@/components/modules";
 import { useDatabase } from "@/lib";
+import useLocalization from "@/lib/useLocalization";
 
 export function RegisterServiceWorker() {
+  const { t } = useLocalization();
+
   useEffect(() => {
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker
         .register("/sw.js")
-        .then(() => console.log("Service Worker registered"))
-        .catch((err) => console.error("SW registration failed:", err));
+        .then(() => console.log(t("serviceWorker.registrationSuccess")))
+        .catch((err) => console.error(t("serviceWorker.registrationFailed"), err));
     }
-  }, []);
+  }, [t]);
 
   return null;
 }
