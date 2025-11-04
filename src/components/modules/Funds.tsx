@@ -1,8 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Trash2, Wallet } from "lucide-react";
+import { Wallet } from "lucide-react";
 import AddFundDialog from "@/components/modules/AddFundDialog";
 import AddTransactionDialog from "@/components/modules/AddTransactionDialog";
+import DeleteFundButton from "@/components/modules/DeleteFundButton";
 import EmptyState from "@/components/modules/EmptyState";
 import type { Fund } from "@/lib";
 import useLocalization from "@/lib/useLocalization";
@@ -25,10 +25,6 @@ export const Funds = ({
   addTransaction,
 }: FundsProps) => {
   const { t } = useLocalization();
-
-  const handleDeleteFund = async (fundId: string) => {
-    await deleteFund(fundId);
-  };
 
   return (
     <section className="space-y-4">
@@ -62,13 +58,7 @@ export const Funds = ({
                     </div>
 
                     <div className="space-x-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDeleteFund(fund.id)}
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
+                      <DeleteFundButton fundId={fund.id} deleteFund={deleteFund} />
                       <AddTransactionDialog
                         id={fund.id}
                         addTransaction={addTransaction}
