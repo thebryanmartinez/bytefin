@@ -27,7 +27,13 @@
     "addTransactionTitle": "Add Transaction",
     "savingsPlaceholder": "Savings",
     "amountPlaceholder": "100.00",
-    "descriptionPlaceholder": "September income"
+    "descriptionPlaceholder": "September income",
+    "amountMustBeNumber": "Amount must be a number.",
+    "amountMustNotBeZero": "Number must not be 0",
+    "descriptionRequired": "Transaction should contain a description.",
+    "descriptionMaxLength": "Description must be at most 100 characters.",
+    "fundRequired": "Fund should contain a name",
+    "fundMaxLength": "Fund name must be at most 30 characters"
   },
   "balanceChart": {
     "noFundsYet": "No funds yet",

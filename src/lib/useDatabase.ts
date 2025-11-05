@@ -45,7 +45,6 @@ export function useDatabase() {
         );
 
         const accountWithFunds = { ...account, funds: fundsWithTransactions };
-        console.log("Loaded account with funds:", accountWithFunds);
         setAccount(accountWithFunds);
       }
     } catch (error) {
@@ -140,7 +139,6 @@ export function useDatabase() {
             (sum, t) => sum + t.amount,
             0,
           );
-          console.log(`Fund ${fund.name}: old total ${fund.total}, new total ${newTotal}`);
           return {
             ...fund,
             transactions: updatedTransactions,
@@ -158,13 +156,10 @@ export function useDatabase() {
       });
 
       // Update fund total in database
-      const fundToUpdate = updatedFunds.find(f => f.id === fundId);
+      const fundToUpdate = updatedFunds.find((f) => f.id === fundId);
       if (fundToUpdate) {
         await database.funds.update(fundId, { total: fundToUpdate.total });
-        console.log(`Updated fund ${fundId} total in database to ${fundToUpdate.total}`);
       }
-
-      console.log("Total balance:", newTotalBalance);
     } catch (error) {
       console.error("Error adding transaction:", error);
     }

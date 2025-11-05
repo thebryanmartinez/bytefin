@@ -9,22 +9,46 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import useLocalization from "@/lib/useLocalization";
+import useLocalization, { type LocalizationKey } from "@/lib/useLocalization";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import * as z from "zod";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-export const AddFundDialog = ({ addFund }: { addFund: any }) => {
+interface AddFundDialogProps {
+  addFund: (fund: string) => void;
+}
+
+const createFormSchema = (t: (key: LocalizationKey) => string) =>
+  z.object({
+    fund: z
+      .string()
+      .min(1, t("funds.fundRequired"))
+      .max(30, t("funds.fundMaxLength")),
+  });
+
+export const AddFundDialog = ({ addFund }: AddFundDialogProps) => {
   const { t } = useLocalization();
   const [isOpen, setIsOpen] = useState(false);
-  const [fundName, setFundName] = useState("");
+
+  const formSchema = createFormSchema(t);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    mode: "onBlur",
+    defaultValues: {
+      fund: "",
+    },
+  });
+
+  const isDisabled = !!form.formState.errors.fund;
 
   const closeDialog = () => setIsOpen(false);
 
-  const handleAddFund = async (fundName: string) => {
-    if (!fundName.trim()) return;
-    await addFund(fundName);
-    setFundName("");
-    setIsOpen(false);
+  const handleAddFund = async (data: z.infer<typeof formSchema>) => {
+    await addFund(data.fund);
+    closeDialog();
   };
 
   return (
@@ -38,25 +62,39 @@ export const AddFundDialog = ({ addFund }: { addFund: any }) => {
             <DialogTitle>{t("funds.addNewFund")}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="space-y-2 pb-4">
-              <Label htmlFor="fund-name">{t("funds.fundName")}</Label>
-              <Input
-                id="fund-name"
-                value={fundName}
-                onChange={(e) => setFundName(e.target.value)}
-                placeholder={t("funds.savingsPlaceholder")}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleAddFund(fundName);
-                  }
-                }}
+            <form
+              className="space-y-2 pb-4"
+              id="form-add-fund"
+              onSubmit={form.handleSubmit(handleAddFund)}
+            >
+              <Controller
+                name="fund"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name}>
+                      {t("funds.fundName")}
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      placeholder={t("funds.savingsPlaceholder")}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
               />
-            </div>
+            </form>
             <div className="flex justify-end space-x-2">
               <Button variant="outline" onClick={closeDialog}>
                 {t("common.cancel")}
               </Button>
-              <Button onClick={() => handleAddFund(fundName)}>{t("funds.addFund")}</Button>
+              <Button type="submit" form="form-add-fund" disabled={isDisabled}>
+                {t("funds.addFund")}
+              </Button>
             </div>
           </div>
         </DialogContent>
