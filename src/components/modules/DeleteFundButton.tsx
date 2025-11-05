@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+import { Check, Trash2 } from "lucide-react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Trash2, Check } from "lucide-react";
 
 interface DeleteFundButtonProps {
   fundId: string;
