@@ -40,7 +40,7 @@ export const DeleteFundButton = ({
   };
 
   return (
-    <Button variant="outline" size="sm" onClick={handleOnClick}>
+    <Button variant="neutral" size="icon" onClick={handleOnClick}>
       {isPending ? <Check /> : <Trash2 />}
     </Button>
   );

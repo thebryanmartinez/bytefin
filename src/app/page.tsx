@@ -13,7 +13,9 @@ export function RegisterServiceWorker() {
       navigator.serviceWorker
         .register("/sw.js")
         .then(() => console.log(t("serviceWorker.registrationSuccess")))
-        .catch((err) => console.error(t("serviceWorker.registrationFailed"), err));
+        .catch((err) =>
+          console.error(t("serviceWorker.registrationFailed"), err),
+        );
     }
   }, [t]);
 
@@ -25,7 +27,7 @@ export default function Home() {
     useDatabase();
 
   return (
-    <main className="flex min-h-screen w-full justify-center bg-slate-50 dark:bg-slate-950 sm:items-start">
+    <main className="flex min-h-screen w-full justify-center bg-background sm:items-start">
       <div className="flex flex-col w-full max-w-xl px-8 flex-1 h-dvh">
         {isLoading || !account ? (
           <div className="flex justify-center h-full items-center">

@@ -36,7 +36,6 @@ export const AddFundDialog = ({ addFund }: AddFundDialogProps) => {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    mode: "onBlur",
     defaultValues: {
       fund: "",
     },
@@ -44,16 +43,26 @@ export const AddFundDialog = ({ addFund }: AddFundDialogProps) => {
 
   const isDisabled = !!form.formState.errors.fund;
 
-  const closeDialog = () => setIsOpen(false);
+  const closeDialog = () => {
+    setIsOpen(false);
+    form.reset();
+  };
 
   const handleAddFund = async (data: z.infer<typeof formSchema>) => {
     await addFund(data.fund);
     closeDialog();
   };
 
+  const handleOnOpenChange = (isOpen: boolean) => {
+    setIsOpen(isOpen);
+    if (!isOpen) {
+      form.reset();
+    }
+  };
+
   return (
     <div>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog open={isOpen} onOpenChange={handleOnOpenChange}>
         <DialogTrigger asChild>
           <Button variant="default">{t("funds.addFund")}</Button>
         </DialogTrigger>
@@ -71,7 +80,7 @@ export const AddFundDialog = ({ addFund }: AddFundDialogProps) => {
                 name="fund"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid}>
+                  <Field data-invalid={fieldState.invalid} className="gap-1">
                     <FieldLabel htmlFor={field.name}>
                       {t("funds.fundName")}
                     </FieldLabel>
@@ -82,14 +91,17 @@ export const AddFundDialog = ({ addFund }: AddFundDialogProps) => {
                       placeholder={t("funds.savingsPlaceholder")}
                     />
                     {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="text-error"
+                      />
                     )}
                   </Field>
                 )}
               />
             </form>
             <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={closeDialog}>
+              <Button variant="neutral" onClick={closeDialog}>
                 {t("common.cancel")}
               </Button>
               <Button type="submit" form="form-add-fund" disabled={isDisabled}>
