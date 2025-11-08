@@ -3,11 +3,7 @@
 import { PieChart as PieChartIcon } from "lucide-react";
 import { Label, Pie, PieChart } from "recharts";
 import EmptyState from "@/components/modules/EmptyState";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import type { Account } from "@/lib";
 import useLocalization from "@/lib/useLocalization";
 
@@ -16,15 +12,35 @@ interface BalanceChartProps {
 }
 
 const COLORS = [
-  "var(--mono-chart-1)",
-  "var(--mono-chart-2)",
-  "var(--mono-chart-3)",
-  "var(--mono-chart-4)",
-  "var(--mono-chart-5)",
-  "var(--mono-chart-6)",
-  "var(--mono-chart-7)",
-  "var(--mono-chart-8)",
+  "var(--chart-0)",
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+  "var(--chart-6)",
+  "var(--chart-7)",
 ];
+
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0];
+    return (
+      <div className="border-border bg-background grid min-w-[6rem] items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-shadow">
+        <div className="text-center flex flex-col items-center">
+          <span className="text-muted-foreground font-bold">{data.name}</span>
+          <span className="text-foreground font-mono font-medium tabular-nums">
+            {data.value.toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD",
+            })}
+          </span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
 
 export const BalanceChart = ({ account }: BalanceChartProps) => {
   const { t } = useLocalization();
@@ -55,7 +71,7 @@ export const BalanceChart = ({ account }: BalanceChartProps) => {
           config={{}}
         >
           <PieChart>
-            <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+            <ChartTooltip cursor={false} content={<CustomTooltip />} />
             <Pie
               data={chartData}
               dataKey="value"

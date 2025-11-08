@@ -33,7 +33,6 @@ export const Funds = ({
           <h2 className="text-lg font-bold ">{t("funds.title")}</h2>
           <AddFundDialog addFund={addFund} />
         </div>
-        <hr />
       </div>
       <div className="pb-4 max-h-[calc(100vh-400px)] w-full overflow-y-auto">
         {funds.length === 0 ? (
@@ -45,20 +44,23 @@ export const Funds = ({
         ) : (
           <div className="space-y-3">
             {funds.map((fund) => (
-              <Card className="py-3" key={fund.id}>
+              <Card className="py-3 bg-secondary-background" key={fund.id}>
                 <CardContent>
                   <div className="flex justify-between items-center">
                     <div className="flex flex-col justify-between">
                       <span className="text-base font-semibold">
                         {fund.name}
                       </span>
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-gray-400">
                         ${fund.total.toFixed(2)}
                       </span>
                     </div>
 
                     <div className="space-x-2">
-                      <DeleteFundButton fundId={fund.id} deleteFund={deleteFund} />
+                      <DeleteFundButton
+                        fundId={fund.id}
+                        deleteFund={deleteFund}
+                      />
                       <AddTransactionDialog
                         id={fund.id}
                         addTransaction={addTransaction}

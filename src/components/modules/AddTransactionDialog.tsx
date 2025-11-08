@@ -52,7 +52,6 @@ export const AddTransactionDialog = ({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    mode: "onBlur",
     defaultValues: {
       amount: 0,
       description: "",
@@ -67,12 +66,22 @@ export const AddTransactionDialog = ({
     closeDialog();
   };
 
-  const closeDialog = () => setIsOpen(false);
+  const closeDialog = () => {
+    setIsOpen(false);
+    form.reset();
+  };
+
+  const handleOnOpenChange = (isOpen: boolean) => {
+    setIsOpen(isOpen);
+    if (!isOpen) {
+      form.reset();
+    }
+  };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOnOpenChange}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
+        <Button variant="neutral" size="sm">
           <Plus className="w-3 h-3 mr-1" />
           {t("common.add")}
         </Button>
@@ -91,7 +100,7 @@ export const AddTransactionDialog = ({
               name="amount"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
+                <Field data-invalid={fieldState.invalid} className="gap-1">
                   <FieldLabel htmlFor={field.name}>
                     {t("funds.amount")}
                   </FieldLabel>
@@ -102,7 +111,10 @@ export const AddTransactionDialog = ({
                     placeholder={t("funds.amountPlaceholder")}
                   />
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-error"
+                    />
                   )}
                 </Field>
               )}
@@ -111,7 +123,7 @@ export const AddTransactionDialog = ({
               name="description"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
+                <Field data-invalid={fieldState.invalid} className="gap-1">
                   <FieldLabel htmlFor={field.name}>
                     {t("funds.description")}
                   </FieldLabel>
@@ -122,14 +134,17 @@ export const AddTransactionDialog = ({
                     placeholder={t("funds.descriptionPlaceholder")}
                   />
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-error"
+                    />
                   )}
                 </Field>
               )}
             />
           </div>
           <div className="flex justify-end space-x-2 pt-4">
-            <Button variant="outline" onClick={closeDialog}>
+            <Button variant="neutral" onClick={closeDialog}>
               {t("common.cancel")}
             </Button>
             <Button
