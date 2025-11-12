@@ -29,7 +29,7 @@
     {
       "src": "app-screenshot.jpeg",
       "type": "image/png",
-      "sizes": "1080x1920",
+      "sizes": "720x1600",
       "form_factor": "narrow"
     }
   ]
