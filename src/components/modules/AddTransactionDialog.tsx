@@ -33,18 +33,19 @@ const createFormSchema = (t: (key: LocalizationKey) => string) =>
 
 interface AddTransactionDialogProps {
   id: string;
-  addTransaction: (
+  updateFundBalance: (
     fundId: string,
-    amount: number,
-    description: string,
+    newBalance: number,
   ) => Promise<void>;
   t: (key: LocalizationKey) => string;
+  currentBalance?: number;
 }
 
 export const AddTransactionDialog = ({
   id,
-  addTransaction,
+  updateFundBalance,
   t,
+  currentBalance = 0,
 }: AddTransactionDialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -61,8 +62,9 @@ export const AddTransactionDialog = ({
   const isDisabled =
     !!form.formState.errors.description || !!form.formState.errors.amount;
 
-  const handleAddTransaction = async (data: z.infer<typeof formSchema>) => {
-    await addTransaction(id, data.amount, data.description);
+  const handleUpdateBalance = async (data: z.infer<typeof formSchema>) => {
+    const newBalance = currentBalance + data.amount;
+    await updateFundBalance(id, newBalance);
     closeDialog();
   };
 
@@ -93,7 +95,7 @@ export const AddTransactionDialog = ({
         <form
           className="space-y-4 pt-4"
           id="form-add-transaction"
-          onSubmit={form.handleSubmit(handleAddTransaction)}
+          onSubmit={form.handleSubmit(handleUpdateBalance)}
         >
           <div className="space-y-4">
             <Controller
@@ -142,6 +144,9 @@ export const AddTransactionDialog = ({
                 </Field>
               )}
             />
+            <div className="text-sm text-gray-500">
+              Current Balance: ${currentBalance.toFixed(2)}
+            </div>
           </div>
           <div className="flex justify-end space-x-2 pt-4">
             <Button variant="neutral" onClick={closeDialog}>
