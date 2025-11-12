@@ -25,18 +25,11 @@ const createFormSchema = (t: (key: LocalizationKey) => string) =>
         .positive(t("funds.amountMustNotBeZero"))
         .or(z.number().negative(t("funds.amountMustNotBeZero"))),
     ),
-    description: z
-      .string()
-      .min(1, t("funds.descriptionRequired"))
-      .max(100, t("funds.descriptionMaxLength")),
   });
 
 interface AddTransactionDialogProps {
   id: string;
-  updateFundBalance: (
-    fundId: string,
-    newBalance: number,
-  ) => Promise<void>;
+  updateFundBalance: (fundId: string, newBalance: number) => Promise<void>;
   t: (key: LocalizationKey) => string;
   currentBalance?: number;
 }
@@ -55,12 +48,10 @@ export const AddTransactionDialog = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       amount: 0,
-      description: "",
     },
   });
 
-  const isDisabled =
-    !!form.formState.errors.description || !!form.formState.errors.amount;
+  const isDisabled = !!form.formState.errors.amount;
 
   const handleUpdateBalance = async (data: z.infer<typeof formSchema>) => {
     const newBalance = currentBalance + data.amount;
@@ -111,29 +102,6 @@ export const AddTransactionDialog = ({
                     id={field.name}
                     aria-invalid={fieldState.invalid}
                     placeholder={t("funds.amountPlaceholder")}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError
-                      errors={[fieldState.error]}
-                      className="text-error"
-                    />
-                  )}
-                </Field>
-              )}
-            />
-            <Controller
-              name="description"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className="gap-1">
-                  <FieldLabel htmlFor={field.name}>
-                    {t("funds.description")}
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                    placeholder={t("funds.descriptionPlaceholder")}
                   />
                   {fieldState.invalid && (
                     <FieldError
