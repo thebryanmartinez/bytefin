@@ -2,8 +2,9 @@
 
 import { useEffect } from "react";
 import { BalanceChart, Funds, Header, Loading } from "@/components/modules";
-import { useDatabase } from "@/lib";
+import { useDatabase } from "@/lib/useSupabase";
 import useLocalization from "@/lib/useLocalization";
+import { useAuth } from "@/lib/useAuth";
 
 export function RegisterServiceWorker() {
   const { t } = useLocalization();
@@ -23,8 +24,30 @@ export function RegisterServiceWorker() {
 }
 
 export default function Home() {
-  const { account, isLoading, addFund, deleteFund, addTransaction } =
+  const { account, isLoading, addFund, deleteFund, updateFundBalance } =
     useDatabase();
+  const { isAuthenticated, isLoading: authLoading, redirectToLogin } = useAuth();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!authLoading && !isAuthenticated) {
+      redirectToLogin();
+    }
+  }, [isAuthenticated, authLoading, redirectToLogin]);
+
+  // Show loading while checking authentication
+  if (authLoading) {
+    return (
+      <div className="flex justify-center h-full items-center min-h-screen">
+        <Loading />
+      </div>
+    );
+  }
+
+  // Don't render main content if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <main className="flex min-h-screen w-full justify-center bg-background sm:items-start">
@@ -41,7 +64,7 @@ export default function Home() {
               funds={account.funds}
               addFund={addFund}
               deleteFund={deleteFund}
-              addTransaction={addTransaction}
+              updateFundBalance={updateFundBalance}
             />
           </>
         )}

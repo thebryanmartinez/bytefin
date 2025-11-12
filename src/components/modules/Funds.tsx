@@ -11,10 +11,9 @@ interface FundsProps {
   funds: Fund[];
   addFund: (name: string) => Promise<void>;
   deleteFund: (fundId: string) => Promise<void>;
-  addTransaction: (
+  updateFundBalance: (
     fundId: string,
-    amount: number,
-    description: string,
+    newBalance: number,
   ) => Promise<void>;
 }
 
@@ -22,7 +21,7 @@ export const Funds = ({
   funds,
   addFund,
   deleteFund,
-  addTransaction,
+  updateFundBalance,
 }: FundsProps) => {
   const { t } = useLocalization();
 
@@ -63,7 +62,8 @@ export const Funds = ({
                       />
                       <AddTransactionDialog
                         id={fund.id}
-                        addTransaction={addTransaction}
+                        updateFundBalance={updateFundBalance}
+                        currentBalance={fund.total}
                         t={t}
                       />
                     </div>
