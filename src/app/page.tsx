@@ -26,7 +26,11 @@ export function RegisterServiceWorker() {
 export default function Home() {
   const { account, isLoading, addFund, deleteFund, updateFundBalance } =
     useDatabase();
-  const { isAuthenticated, isLoading: authLoading, redirectToLogin } = useAuth();
+  const {
+    isAuthenticated,
+    isLoading: authLoading,
+    redirectToLogin,
+  } = useAuth();
 
   // Redirect to login if not authenticated
   useEffect(() => {

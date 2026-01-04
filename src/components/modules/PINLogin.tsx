@@ -1,60 +1,60 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Check, X } from 'lucide-react'
-import { useAuth } from '@/lib/useAuth'
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Check, X } from "lucide-react";
+import { useAuth } from "@/lib/useAuth";
 
 export const PINLogin = () => {
-  const [pin, setPin] = useState('')
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
-  const { login } = useAuth()
+  const [pin, setPin] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { login } = useAuth();
 
   const handleDigitClick = (digit: string) => {
     if (pin.length < 4) {
-      setPin((prev) => prev + digit)
-      setError('')
+      setPin((prev) => prev + digit);
+      setError("");
     }
-  }
+  };
 
   const handleClear = () => {
-    setPin('')
-    setError('')
-  }
+    setPin("");
+    setError("");
+  };
 
   const handleEnter = async () => {
     if (pin.length === 4) {
-      setIsLoading(true)
-      setError('')
+      setIsLoading(true);
+      setError("");
 
       try {
-        const success = await login(pin)
+        const success = await login(pin);
 
         if (success) {
-          router.push('/')
+          router.push("/");
         } else {
-          setError('Incorrect PIN')
-          setPin('')
+          setError("Incorrect PIN");
+          setPin("");
         }
       } catch (error) {
-        console.error('Login error:', error)
-        setError('Login failed. Please try again.')
-        setPin('')
+        console.error("Login error:", error);
+        setError("Login failed. Please try again.");
+        setPin("");
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
     } else {
-      setError('Please enter 4 digits')
+      setError("Please enter 4 digits");
     }
-  }
+  };
 
   const renderKeypad = () => {
-    const digits = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
     return (
-      <div className='grid grid-cols-3 gap-3 max-w-[280px] mx-auto'>
+      <div className="grid grid-cols-3 gap-3 max-w-[280px] mx-auto">
         {digits.map((digit) => (
           <button
             key={digit}
@@ -85,12 +85,12 @@ export const PINLogin = () => {
             transition-all duration-150 shadow-shadow
           `}
         >
-          <X className='w-5 h-5' />
+          <X className="w-5 h-5" />
         </button>
 
         {/* 0 Button */}
         <button
-          onClick={() => handleDigitClick('0')}
+          onClick={() => handleDigitClick("0")}
           className={`
             aspect-square flex items-center justify-center
             text-xl font-semibold rounded-lg
@@ -120,17 +120,17 @@ export const PINLogin = () => {
           `}
         >
           {isLoading ? (
-            <div className='w-5 h-5 border-2 border-main-foreground/30 border-t-main-foreground rounded-full animate-spin' />
+            <div className="w-5 h-5 border-2 border-main-foreground/30 border-t-main-foreground rounded-full animate-spin" />
           ) : (
-            <Check className='w-5 h-5' />
+            <Check className="w-5 h-5" />
           )}
         </button>
       </div>
-    )
-  }
+    );
+  };
 
   const renderPINDisplay = () => (
-    <div className='flex justify-center space-x-3 mb-6'>
+    <div className="flex justify-center space-x-3 mb-6">
       {[0, 1, 2, 3].map((index) => (
         <div
           key={index}
@@ -138,34 +138,34 @@ export const PINLogin = () => {
             w-4 h-4 rounded-full border-2 transition-colors duration-200
             ${
               pin[index]
-                ? 'bg-main border-main'
-                : 'border-border bg-transparent'
+                ? "bg-main border-main"
+                : "border-border bg-transparent"
             }
           `}
         />
       ))}
     </div>
-  )
+  );
 
   return (
-    <div className='flex flex-col items-center justify-end min-h-screen bg-background px-8 pb-12 sm:pb-24'>
-      <div className='w-full max-w-md mt-auto '>
-        <div className='text-center space-y-4 mb-20'>
-          <h1 className='text-3xl font-heading text-foreground'>Enter PIN</h1>
-          <p className='text-muted-foreground'>Please enter your 4-digit PIN</p>
+    <div className="flex flex-col items-center justify-end min-h-screen bg-background px-8 pb-12 sm:pb-24">
+      <div className="w-full max-w-md mt-auto mb-auto">
+        <div className="text-center space-y-4 mb-20">
+          <h1 className="text-3xl font-heading text-foreground">Enter PIN</h1>
+          <p className="text-muted-foreground">Please enter your 4-digit PIN</p>
           {renderPINDisplay()}
         </div>
 
         {renderKeypad()}
 
         {error && (
-          <div className='text-center mt-4'>
-            <p className='text-error text-sm font-medium'>{error}</p>
+          <div className="text-center mt-4">
+            <p className="text-error text-sm font-medium">{error}</p>
           </div>
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default PINLogin
+export default PINLogin;

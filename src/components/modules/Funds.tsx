@@ -11,10 +11,7 @@ interface FundsProps {
   funds: Fund[];
   addFund: (name: string) => Promise<void>;
   deleteFund: (fundId: string) => Promise<void>;
-  updateFundBalance: (
-    fundId: string,
-    newBalance: number,
-  ) => Promise<void>;
+  updateFundBalance: (fundId: string, newBalance: number) => Promise<void>;
 }
 
 export const Funds = ({
