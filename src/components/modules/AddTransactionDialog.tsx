@@ -1,5 +1,6 @@
 "use client";
 
+import type { Id } from "@convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { useState } from "react";
@@ -29,7 +30,7 @@ const createFormSchema = (t: (key: LocalizationKey) => string) =>
   });
 
 interface AddTransactionDialogProps {
-  fundId: string;
+  fundId: Id<"funds">;
   account: FundsProps["account"];
   updateFundBalance: FundsProps["updateFundBalance"];
   t: (key: LocalizationKey) => string;

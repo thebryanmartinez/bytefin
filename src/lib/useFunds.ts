@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import { useAccounts } from "./useAccounts";
+import type { Id } from "@convex/_generated/dataModel";
 
 export const useFunds = () => {
   const { accounts } = useAccounts();
@@ -19,7 +20,7 @@ export const useFunds = () => {
     }
   };
 
-  const handleDeleteFund = (id: string) => {
+  const handleDeleteFund = (id: Id<"funds">) => {
     try {
       deleteFund({ id });
     } catch (error) {
@@ -28,7 +29,7 @@ export const useFunds = () => {
   };
 
   const handleUpdateFundBalance = (
-    id: string,
+    id: Id<"funds">,
     currentBalance: number,
     amount: number,
   ) => {
