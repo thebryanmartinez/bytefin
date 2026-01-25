@@ -1,5 +1,6 @@
 "use client";
 
+import type { Id } from "@convex/_generated/dataModel";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
 import { useState } from "react";
@@ -16,6 +17,7 @@ import {
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import type { LocalizationKey } from "@/lib/useLocalization";
+import type { FundsProps } from "./Funds";
 
 const createFormSchema = (t: (key: LocalizationKey) => string) =>
   z.object({
@@ -28,17 +30,21 @@ const createFormSchema = (t: (key: LocalizationKey) => string) =>
   });
 
 interface AddTransactionDialogProps {
-  id: string;
-  updateFundBalance: (fundId: string, newBalance: number) => Promise<void>;
+  fundId: Id<"funds">;
+  account: FundsProps["account"];
+  updateFundBalance: FundsProps["updateFundBalance"];
   t: (key: LocalizationKey) => string;
   currentBalance?: number;
+  updateAccountBalance: FundsProps["updateAccountBalance"];
 }
 
 export const AddTransactionDialog = ({
-  id,
+  fundId,
+  account,
   updateFundBalance,
   t,
   currentBalance = 0,
+  updateAccountBalance,
 }: AddTransactionDialogProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -54,9 +60,13 @@ export const AddTransactionDialog = ({
   const isDisabled = !!form.formState.errors.amount;
 
   const handleUpdateBalance = async (data: z.infer<typeof formSchema>) => {
-    const newBalance = currentBalance + data.amount;
-    await updateFundBalance(id, newBalance);
-    closeDialog();
+    try {
+      updateFundBalance(fundId, currentBalance, data.amount);
+      updateAccountBalance(account._id, account.balance, data.amount);
+      closeDialog();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const closeDialog = () => {
