@@ -9,7 +9,7 @@ import useLocalization from "@/lib/useLocalization";
 
 export type FundsProps = {
   funds: Fund[] | undefined;
-  account: Account | undefined;
+  account: Account;
   addFund: (name: string) => void;
   deleteFund: (id: string) => void;
   updateFundBalance: (

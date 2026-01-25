@@ -61,7 +61,7 @@ export const AddTransactionDialog = ({
   const handleUpdateBalance = async (data: z.infer<typeof formSchema>) => {
     try {
       updateFundBalance(fundId, currentBalance, data.amount);
-      updateAccountBalance(account?._id, account?.balance, data.amount);
+      updateAccountBalance(account._id, account.balance, data.amount);
       closeDialog();
     } catch (error) {
       console.error(error);
