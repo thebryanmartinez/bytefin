@@ -2,9 +2,9 @@
 
 import { useEffect } from "react";
 import { BalanceChart, Funds, Header, Loading } from "@/components/modules";
-import { useDatabase } from "@/lib/useSupabase";
 import useLocalization from "@/lib/useLocalization";
 import { useAuth } from "@/lib/useAuth";
+import { useAccounts, useFunds } from "@/lib";
 
 export function RegisterServiceWorker() {
   const { t } = useLocalization();
@@ -24,22 +24,21 @@ export function RegisterServiceWorker() {
 }
 
 export default function Home() {
-  const { account, isLoading, addFund, deleteFund, updateFundBalance } =
-    useDatabase();
+  const { funds, handleCreateFund, handleDeleteFund, handleUpdateFundBalance } =
+    useFunds();
+  const { accounts, handleUpdateAccountBalance } = useAccounts();
   const {
     isAuthenticated,
     isLoading: authLoading,
     redirectToLogin,
   } = useAuth();
 
-  // Redirect to login if not authenticated
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       redirectToLogin();
     }
   }, [isAuthenticated, authLoading, redirectToLogin]);
 
-  // Show loading while checking authentication
   if (authLoading) {
     return (
       <div className="flex justify-center h-full items-center min-h-screen">
@@ -48,7 +47,6 @@ export default function Home() {
     );
   }
 
-  // Don't render main content if not authenticated
   if (!isAuthenticated) {
     return null;
   }
@@ -56,19 +54,21 @@ export default function Home() {
   return (
     <main className="flex min-h-screen w-full justify-center bg-background sm:items-start">
       <div className="flex flex-col w-full max-w-xl px-8 flex-1 h-dvh">
-        {isLoading || !account ? (
+        {!accounts || !funds ? (
           <div className="flex justify-center h-full items-center">
             <Loading />
           </div>
         ) : (
           <>
             <Header />
-            <BalanceChart account={account} />
+            <BalanceChart account={accounts[0]} funds={funds} />
             <Funds
-              funds={account.funds}
-              addFund={addFund}
-              deleteFund={deleteFund}
-              updateFundBalance={updateFundBalance}
+              funds={funds}
+              account={accounts[0]}
+              addFund={handleCreateFund}
+              deleteFund={handleDeleteFund}
+              updateFundBalance={handleUpdateFundBalance}
+              updateAccountBalance={handleUpdateAccountBalance}
             />
           </>
         )}

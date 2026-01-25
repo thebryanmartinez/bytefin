@@ -48,8 +48,8 @@ export const AddFundDialog = ({ addFund }: AddFundDialogProps) => {
     form.reset();
   };
 
-  const handleAddFund = async (data: z.infer<typeof formSchema>) => {
-    await addFund(data.fund);
+  const handleAddFund = (data: z.infer<typeof formSchema>) => {
+    addFund(data.fund);
     closeDialog();
   };
 
@@ -61,57 +61,55 @@ export const AddFundDialog = ({ addFund }: AddFundDialogProps) => {
   };
 
   return (
-    <div>
-      <Dialog open={isOpen} onOpenChange={handleOnOpenChange}>
-        <DialogTrigger asChild>
-          <Button variant="default">{t("funds.addFund")}</Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader className="pb-4">
-            <DialogTitle>{t("funds.addNewFund")}</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <form
-              className="space-y-2 pb-4"
-              id="form-add-fund"
-              onSubmit={form.handleSubmit(handleAddFund)}
-            >
-              <Controller
-                name="fund"
-                control={form.control}
-                render={({ field, fieldState }) => (
-                  <Field data-invalid={fieldState.invalid} className="gap-1">
-                    <FieldLabel htmlFor={field.name}>
-                      {t("funds.fundName")}
-                    </FieldLabel>
-                    <Input
-                      {...field}
-                      id={field.name}
-                      aria-invalid={fieldState.invalid}
-                      placeholder={t("funds.savingsPlaceholder")}
+    <Dialog open={isOpen} onOpenChange={handleOnOpenChange}>
+      <DialogTrigger asChild>
+        <Button variant="default">{t("funds.addFund")}</Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader className="pb-4">
+          <DialogTitle>{t("funds.addNewFund")}</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <form
+            className="space-y-2 pb-4"
+            id="form-add-fund"
+            onSubmit={form.handleSubmit(handleAddFund)}
+          >
+            <Controller
+              name="fund"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <FieldLabel htmlFor={field.name}>
+                    {t("funds.fundName")}
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder={t("funds.savingsPlaceholder")}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-error"
                     />
-                    {fieldState.invalid && (
-                      <FieldError
-                        errors={[fieldState.error]}
-                        className="text-error"
-                      />
-                    )}
-                  </Field>
-                )}
-              />
-            </form>
-            <div className="flex justify-end space-x-2">
-              <Button variant="neutral" onClick={closeDialog}>
-                {t("common.cancel")}
-              </Button>
-              <Button type="submit" form="form-add-fund" disabled={isDisabled}>
-                {t("funds.addFund")}
-              </Button>
-            </div>
+                  )}
+                </Field>
+              )}
+            />
+          </form>
+          <div className="flex justify-end space-x-2">
+            <Button variant="neutral" onClick={closeDialog}>
+              {t("common.cancel")}
+            </Button>
+            <Button type="submit" form="form-add-fund" disabled={isDisabled}>
+              {t("funds.addFund")}
+            </Button>
           </div>
-        </DialogContent>
-      </Dialog>
-    </div>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

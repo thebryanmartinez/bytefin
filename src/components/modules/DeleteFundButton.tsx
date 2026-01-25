@@ -2,15 +2,14 @@ import { Check, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 
+import type { FundsProps } from "./Funds";
+
 interface DeleteFundButtonProps {
-  fundId: string;
-  deleteFund: (fundId: string) => Promise<void>;
+  id: string;
+  deleteFund: FundsProps["deleteFund"];
 }
 
-export const DeleteFundButton = ({
-  fundId,
-  deleteFund,
-}: DeleteFundButtonProps) => {
+export const DeleteFundButton = ({ id, deleteFund }: DeleteFundButtonProps) => {
   const [isPending, setIsPending] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -25,13 +24,13 @@ export const DeleteFundButton = ({
     }, 3000);
   };
 
-  const handleDeleteFund = async () => {
+  const handleDeleteFund = () => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
     setIsPending(false);
-    await deleteFund(fundId);
+    deleteFund(id);
   };
 
   const handleOnClick = () => {

@@ -1,22 +1,14 @@
-export interface Transaction {
-  id: string;
-  amount: number;
-  description: string;
-  date: string;
-  fundId: string;
-}
+import type { Id } from "../../convex/_generated/dataModel";
 
-export interface Fund {
-  id: string;
+export type Fund = {
+  _id: Id<"funds">;
   name: string;
-  transactions: Transaction[];
-  total: number;
+  balance: number;
   accountId: string;
-}
+};
 
-export interface Account {
-  id: string;
+export type Account = {
+  _id: Id<"accounts">;
   name: string;
-  funds: Fund[];
-  totalBalance: number;
-}
+  balance: number;
+};

@@ -1,24 +1,36 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { Wallet } from "lucide-react";
 import AddFundDialog from "@/components/modules/AddFundDialog";
 import AddTransactionDialog from "@/components/modules/AddTransactionDialog";
 import DeleteFundButton from "@/components/modules/DeleteFundButton";
 import EmptyState from "@/components/modules/EmptyState";
-import type { Fund } from "@/lib";
+import { Card, CardContent } from "@/components/ui/card";
+import type { Account, Fund } from "@/lib";
 import useLocalization from "@/lib/useLocalization";
 
-interface FundsProps {
-  funds: Fund[];
-  addFund: (name: string) => Promise<void>;
-  deleteFund: (fundId: string) => Promise<void>;
-  updateFundBalance: (fundId: string, newBalance: number) => Promise<void>;
-}
+export type FundsProps = {
+  funds: Fund[] | undefined;
+  account: Account | undefined;
+  addFund: (name: string) => void;
+  deleteFund: (id: string) => void;
+  updateFundBalance: (
+    id: string,
+    currentBalance: number,
+    amount: number,
+  ) => void;
+  updateAccountBalance: (
+    id: string,
+    currentBalance: number,
+    amount: number,
+  ) => void;
+};
 
 export const Funds = ({
   funds,
+  account,
   addFund,
   deleteFund,
   updateFundBalance,
+  updateAccountBalance,
 }: FundsProps) => {
   const { t } = useLocalization();
 
@@ -31,7 +43,7 @@ export const Funds = ({
         </div>
       </div>
       <div className="pb-4 max-h-[calc(100vh-400px)] w-full overflow-y-auto overflow-x-hidden">
-        {funds.length === 0 ? (
+        {!funds || funds.length === 0 ? (
           <EmptyState
             icon={Wallet}
             title={t("funds.noFundsYet")}
@@ -40,7 +52,7 @@ export const Funds = ({
         ) : (
           <div className="space-y-3">
             {funds.map((fund) => (
-              <Card className="py-3 bg-secondary-background" key={fund.id}>
+              <Card className="py-3 bg-secondary-background" key={fund._id}>
                 <CardContent>
                   <div className="flex justify-between items-center">
                     <div className="flex flex-col justify-between">
@@ -48,19 +60,18 @@ export const Funds = ({
                         {fund.name}
                       </span>
                       <span className="text-sm text-gray-400">
-                        ${fund.total.toFixed(2)}
+                        ${fund.balance.toFixed(2)}
                       </span>
                     </div>
 
                     <div className="space-x-2">
-                      <DeleteFundButton
-                        fundId={fund.id}
-                        deleteFund={deleteFund}
-                      />
+                      <DeleteFundButton id={fund._id} deleteFund={deleteFund} />
                       <AddTransactionDialog
-                        id={fund.id}
+                        fundId={fund._id}
+                        account={account}
                         updateFundBalance={updateFundBalance}
-                        currentBalance={fund.total}
+                        updateAccountBalance={updateAccountBalance}
+                        currentBalance={fund.balance}
                         t={t}
                       />
                     </div>

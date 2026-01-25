@@ -1,4 +1,5 @@
-export type { Fund, Account, Transaction } from "./types";
+export type { Fund, Account } from "./types";
 export { useDatabase } from "./useSupabase";
+export * from "./useFunds";
 export * from "./supabase";
-export * from "./utils";
+export * from "./useAccounts";
