@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,57 +12,34 @@ import {
   FieldError,
   FieldLabel,
 } from "@/modules/shared/ui";
-import { type LocalizationKey, useLocalization } from "@/modules/shared/hooks";
+import { useLocalization } from "@/modules/shared/hooks";
 import * as z from "zod";
-import { Controller, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller } from "react-hook-form";
+import { useDialog } from "@/modules/shared/hooks";
+import { useAddFund } from "@/modules/funds/hooks";
+import type { addFundSchema } from "@/modules/funds/forms";
 
 interface AddFundDialogProps {
-  addFund: (fund: string) => void;
+  addFund: (fundName: string) => void;
 }
-
-const createFormSchema = (t: (key: LocalizationKey) => string) =>
-  z.object({
-    fund: z
-      .string()
-      .min(1, t("funds.fundRequired"))
-      .max(30, t("funds.fundMaxLength")),
-  });
 
 export const AddFundDialog = ({ addFund }: AddFundDialogProps) => {
   const { t } = useLocalization();
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, handleClose, handleOpenChange } = useDialog();
+  const { addFundForm, isFormDisabled } = useAddFund(t);
 
-  const formSchema = createFormSchema(t);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      fund: "",
-    },
-  });
-
-  const isDisabled = !!form.formState.errors.fund;
-
-  const closeDialog = () => {
-    setIsOpen(false);
-    form.reset();
-  };
-
-  const handleAddFund = (data: z.infer<typeof formSchema>) => {
-    addFund(data.fund);
-    closeDialog();
-  };
-
-  const handleOnOpenChange = (isOpen: boolean) => {
-    setIsOpen(isOpen);
-    if (!isOpen) {
-      form.reset();
-    }
+  const handleAddFund = (data: z.infer<typeof addFundSchema>) => {
+    addFund(data.fundName);
+    handleClose(addFundForm.reset);
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOnOpenChange}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open: boolean) =>
+        handleOpenChange(open, addFundForm.reset)
+      }
+    >
       <DialogTrigger asChild>
         <Button variant="default">{t("funds.addFund")}</Button>
       </DialogTrigger>
@@ -75,11 +51,11 @@ export const AddFundDialog = ({ addFund }: AddFundDialogProps) => {
           <form
             className="space-y-2 pb-4"
             id="form-add-fund"
-            onSubmit={form.handleSubmit(handleAddFund)}
+            onSubmit={addFundForm.handleSubmit(handleAddFund)}
           >
             <Controller
-              name="fund"
-              control={form.control}
+              name="fundName"
+              control={addFundForm.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid} className="gap-1">
                   <FieldLabel htmlFor={field.name}>
@@ -102,10 +78,17 @@ export const AddFundDialog = ({ addFund }: AddFundDialogProps) => {
             />
           </form>
           <div className="flex justify-end space-x-2">
-            <Button variant="neutral" onClick={closeDialog}>
+            <Button
+              variant="neutral"
+              onClick={() => handleClose(addFundForm.reset)}
+            >
               {t("common.cancel")}
             </Button>
-            <Button type="submit" form="form-add-fund" disabled={isDisabled}>
+            <Button
+              type="submit"
+              form="form-add-fund"
+              disabled={isFormDisabled}
+            >
               {t("funds.addFund")}
             </Button>
           </div>

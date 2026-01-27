@@ -16,16 +16,16 @@ import {
   FieldLabel,
   Input,
 } from "@/modules/shared/ui";
-import type { LocalizationKey } from "@/modules/shared/hooks";
+import { useLocalization } from "@/modules/shared/hooks";
 import type { FundsProps } from "@/modules/funds/interfaces";
-import { useAddTransaction, useDialog } from "@/modules/funds/hooks";
+import { useAddTransaction } from "@/modules/funds/hooks";
+import { useDialog } from "@/modules/shared/hooks";
 import type { addTransactionSchema } from "@/modules/funds/forms";
 
 interface AddTransactionDialogProps {
   fundId: Id<"funds">;
   account: FundsProps["account"];
   updateFundBalance: FundsProps["updateFundBalance"];
-  t: (key: LocalizationKey) => string;
   currentBalance?: number;
   updateAccountBalance: FundsProps["updateAccountBalance"];
 }
@@ -34,12 +34,11 @@ export const AddTransactionDialog = ({
   fundId,
   account,
   updateFundBalance,
-  t,
   currentBalance = 0,
   updateAccountBalance,
 }: AddTransactionDialogProps) => {
+  const { t } = useLocalization();
   const { addTransactionForm, isFormDisabled } = useAddTransaction(t);
-
   const { isOpen, handleClose, handleOpenChange } = useDialog();
 
   const handleUpdateBalance = async (
