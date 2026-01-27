@@ -18,7 +18,7 @@ import {
 } from "@/modules/shared/ui";
 import type { LocalizationKey } from "@/modules/shared/hooks";
 import type { FundsProps } from "@/modules/funds/interfaces";
-import { useAddTransaction } from "@/modules/funds/hooks";
+import { useAddTransaction, useDialog } from "@/modules/funds/hooks";
 import type { addTransactionSchema } from "@/modules/funds/forms";
 
 interface AddTransactionDialogProps {
@@ -38,13 +38,9 @@ export const AddTransactionDialog = ({
   currentBalance = 0,
   updateAccountBalance,
 }: AddTransactionDialogProps) => {
-  const {
-    addTransactionForm,
-    closeDialog,
-    handleOnOpenChange,
-    isDialogOpen,
-    isFormDisabled,
-  } = useAddTransaction(t);
+  const { addTransactionForm, isFormDisabled } = useAddTransaction(t);
+
+  const { isOpen, handleClose, handleOpenChange } = useDialog();
 
   const handleUpdateBalance = async (
     data: z.infer<typeof addTransactionSchema>,
@@ -52,14 +48,17 @@ export const AddTransactionDialog = ({
     try {
       updateFundBalance(fundId, currentBalance, data.amount);
       updateAccountBalance(account._id, account.balance, data.amount);
-      closeDialog();
+      handleClose(addTransactionForm.reset);
     } catch (error) {
       console.error(error);
     }
   };
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={handleOnOpenChange}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={() => handleOpenChange(!isOpen, addTransactionForm.reset)}
+    >
       <DialogTrigger asChild>
         <Button variant="neutral" size="sm">
           <Plus className="w-3 h-3 mr-1" />
@@ -104,7 +103,10 @@ export const AddTransactionDialog = ({
             </div>
           </div>
           <div className="flex justify-end space-x-2 pt-4">
-            <Button variant="neutral" onClick={closeDialog}>
+            <Button
+              variant="neutral"
+              onClick={() => handleClose(addTransactionForm.reset)}
+            >
               {t("common.cancel")}
             </Button>
             <Button
