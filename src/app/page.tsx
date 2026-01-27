@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { BalanceChart, Funds } from "@/modules/funds/components";
 import { Header, Loading } from "@/modules/shared/components";
 import { useLocalization } from "@/modules/shared/hooks";
-import { useAuth } from "@/modules/authentication/hooks/useAuth";
+import { useAuth } from "@/modules/authentication/hooks";
 import { useAccounts, useFunds } from "@/modules/funds/hooks";
 
 export function RegisterServiceWorker() {
