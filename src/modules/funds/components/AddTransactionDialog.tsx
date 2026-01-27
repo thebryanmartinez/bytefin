@@ -18,18 +18,10 @@ import {
   FieldLabel,
   Input,
 } from "@/modules/shared/ui";
-import type { LocalizationKey } from "@/modules/shared/hooks/useLocalization";
+import type { LocalizationKey } from "@/modules/shared/hooks";
 import type { FundsProps } from "@/modules/funds/interfaces";
-
-const createFormSchema = (t: (key: LocalizationKey) => string) =>
-  z.object({
-    amount: z.transform(Number).pipe(
-      z
-        .number(t("funds.amountMustBeNumber"))
-        .positive(t("funds.amountMustNotBeZero"))
-        .or(z.number().negative(t("funds.amountMustNotBeZero"))),
-    ),
-  });
+import { useAddTransaction } from "@/modules/funds/hooks";
+import type { addTransactionSchema } from "@/modules/funds/forms";
 
 interface AddTransactionDialogProps {
   fundId: Id<"funds">;
@@ -48,20 +40,17 @@ export const AddTransactionDialog = ({
   currentBalance = 0,
   updateAccountBalance,
 }: AddTransactionDialogProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const {
+    addTransactionForm,
+    closeDialog,
+    handleOnOpenChange,
+    isDialogOpen,
+    isFormDisabled,
+  } = useAddTransaction(t);
 
-  const formSchema = createFormSchema(t);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      amount: 0,
-    },
-  });
-
-  const isDisabled = !!form.formState.errors.amount;
-
-  const handleUpdateBalance = async (data: z.infer<typeof formSchema>) => {
+  const handleUpdateBalance = async (
+    data: z.infer<typeof addTransactionSchema>,
+  ) => {
     try {
       updateFundBalance(fundId, currentBalance, data.amount);
       updateAccountBalance(account._id, account.balance, data.amount);
@@ -71,20 +60,8 @@ export const AddTransactionDialog = ({
     }
   };
 
-  const closeDialog = () => {
-    setIsOpen(false);
-    form.reset();
-  };
-
-  const handleOnOpenChange = (isOpen: boolean) => {
-    setIsOpen(isOpen);
-    if (!isOpen) {
-      form.reset();
-    }
-  };
-
   return (
-    <Dialog open={isOpen} onOpenChange={handleOnOpenChange}>
+    <Dialog open={isDialogOpen} onOpenChange={handleOnOpenChange}>
       <DialogTrigger asChild>
         <Button variant="neutral" size="sm">
           <Plus className="w-3 h-3 mr-1" />
@@ -98,12 +75,12 @@ export const AddTransactionDialog = ({
         <form
           className="space-y-4 pt-4"
           id="form-add-transaction"
-          onSubmit={form.handleSubmit(handleUpdateBalance)}
+          onSubmit={addTransactionForm.handleSubmit(handleUpdateBalance)}
         >
           <div className="space-y-4">
             <Controller
               name="amount"
-              control={form.control}
+              control={addTransactionForm.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid} className="gap-1">
                   <FieldLabel htmlFor={field.name}>
@@ -135,7 +112,7 @@ export const AddTransactionDialog = ({
             <Button
               type="submit"
               form="form-add-transaction"
-              disabled={isDisabled}
+              disabled={isFormDisabled}
             >
               {t("funds.addTransaction")}
             </Button>
