@@ -2,7 +2,7 @@
 
 import { ConvexProvider, ConvexReactClient } from "convex/react";
 import type { ReactNode } from "react";
-import { ThemeProvider } from "@/components/modules/ThemeProvider";
+import { ThemeProvider } from "@/modules/shared/components";
 
 const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 

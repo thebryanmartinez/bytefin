@@ -1,0 +1,16 @@
+import { ThemeToggle } from "@/modules/shared/components";
+import { useLocalization } from "@/modules/shared/hooks";
+
+export const Header = () => {
+  const { t } = useLocalization();
+
+  return (
+    <section className="flex justify-between items-center py-4">
+      <span></span>
+      <h1 className="text-2xl font-bold">{t("header.title")}</h1>
+      <ThemeToggle />
+    </section>
+  );
+};
+
+export default Header;

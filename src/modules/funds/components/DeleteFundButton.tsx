@@ -1,0 +1,48 @@
+import type { Id } from "@convex/_generated/dataModel";
+import { Check, Trash2 } from "lucide-react";
+import { useRef, useState } from "react";
+import { Button } from "@/modules/shared/ui";
+import type { FundsProps } from "@/modules/funds/interfaces";
+
+interface DeleteFundButtonProps {
+  id: Id<"funds">;
+  deleteFund: FundsProps["deleteFund"];
+}
+
+export const DeleteFundButton = ({ id, deleteFund }: DeleteFundButtonProps) => {
+  const [isPending, setIsPending] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const startPendingDelete = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setIsPending(true);
+    timeoutRef.current = setTimeout(() => {
+      setIsPending(false);
+      timeoutRef.current = null;
+    }, 3000);
+  };
+
+  const handleDeleteFund = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setIsPending(false);
+    deleteFund(id);
+  };
+
+  const handleOnClick = () => {
+    if (isPending) handleDeleteFund();
+    else startPendingDelete();
+  };
+
+  return (
+    <Button variant="neutral" size="icon" onClick={handleOnClick}>
+      {isPending ? <Check /> : <Trash2 />}
+    </Button>
+  );
+};
+
+export default DeleteFundButton;

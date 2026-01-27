@@ -1,0 +1,149 @@
+"use client";
+
+import type { Id } from "@convex/_generated/dataModel";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Plus } from "lucide-react";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import * as z from "zod";
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  Field,
+  FieldError,
+  FieldLabel,
+  Input,
+} from "@/modules/shared/ui";
+import type { LocalizationKey } from "@/modules/shared/hooks/useLocalization";
+import type { FundsProps } from "@/modules/funds/interfaces";
+
+const createFormSchema = (t: (key: LocalizationKey) => string) =>
+  z.object({
+    amount: z.transform(Number).pipe(
+      z
+        .number(t("funds.amountMustBeNumber"))
+        .positive(t("funds.amountMustNotBeZero"))
+        .or(z.number().negative(t("funds.amountMustNotBeZero"))),
+    ),
+  });
+
+interface AddTransactionDialogProps {
+  fundId: Id<"funds">;
+  account: FundsProps["account"];
+  updateFundBalance: FundsProps["updateFundBalance"];
+  t: (key: LocalizationKey) => string;
+  currentBalance?: number;
+  updateAccountBalance: FundsProps["updateAccountBalance"];
+}
+
+export const AddTransactionDialog = ({
+  fundId,
+  account,
+  updateFundBalance,
+  t,
+  currentBalance = 0,
+  updateAccountBalance,
+}: AddTransactionDialogProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const formSchema = createFormSchema(t);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      amount: 0,
+    },
+  });
+
+  const isDisabled = !!form.formState.errors.amount;
+
+  const handleUpdateBalance = async (data: z.infer<typeof formSchema>) => {
+    try {
+      updateFundBalance(fundId, currentBalance, data.amount);
+      updateAccountBalance(account._id, account.balance, data.amount);
+      closeDialog();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const closeDialog = () => {
+    setIsOpen(false);
+    form.reset();
+  };
+
+  const handleOnOpenChange = (isOpen: boolean) => {
+    setIsOpen(isOpen);
+    if (!isOpen) {
+      form.reset();
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={handleOnOpenChange}>
+      <DialogTrigger asChild>
+        <Button variant="neutral" size="sm">
+          <Plus className="w-3 h-3 mr-1" />
+          {t("common.add")}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="mx-auto">
+        <DialogHeader>
+          <DialogTitle>{t("funds.addTransactionTitle")}</DialogTitle>
+        </DialogHeader>
+        <form
+          className="space-y-4 pt-4"
+          id="form-add-transaction"
+          onSubmit={form.handleSubmit(handleUpdateBalance)}
+        >
+          <div className="space-y-4">
+            <Controller
+              name="amount"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="gap-1">
+                  <FieldLabel htmlFor={field.name}>
+                    {t("funds.amount")}
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id={field.name}
+                    aria-invalid={fieldState.invalid}
+                    placeholder={t("funds.amountPlaceholder")}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-error"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            <div className="text-sm text-gray-500">
+              Current Balance: ${currentBalance.toFixed(2)}
+            </div>
+          </div>
+          <div className="flex justify-end space-x-2 pt-4">
+            <Button variant="neutral" onClick={closeDialog}>
+              {t("common.cancel")}
+            </Button>
+            <Button
+              type="submit"
+              form="form-add-transaction"
+              disabled={isDisabled}
+            >
+              {t("funds.addTransaction")}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default AddTransactionDialog;
