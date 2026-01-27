@@ -3,7 +3,11 @@
 import type { Id } from "@convex/_generated/dataModel";
 import { Plus } from "lucide-react";
 import { Controller } from "react-hook-form";
-import * as z from "zod";
+import type * as z from "zod";
+import type { addTransactionSchema } from "@/modules/funds/forms";
+import { useAddTransaction } from "@/modules/funds/hooks";
+import type { FundsProps } from "@/modules/funds/interfaces";
+import { useDialog, useLocalization } from "@/modules/shared/hooks";
 import {
   Button,
   Dialog,
@@ -16,11 +20,6 @@ import {
   FieldLabel,
   Input,
 } from "@/modules/shared/ui";
-import { useLocalization } from "@/modules/shared/hooks";
-import type { FundsProps } from "@/modules/funds/interfaces";
-import { useAddTransaction } from "@/modules/funds/hooks";
-import { useDialog } from "@/modules/shared/hooks";
-import type { addTransactionSchema } from "@/modules/funds/forms";
 
 interface AddTransactionDialogProps {
   fundId: Id<"funds">;

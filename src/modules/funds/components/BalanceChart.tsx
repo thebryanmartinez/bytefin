@@ -1,11 +1,11 @@
 "use client";
 
-import { Label, Pie, PieChart } from "recharts";
-import { EmptyState } from "@/modules/shared/components";
 import { PieChart as PieChartIcon } from "lucide-react";
-import { ChartContainer, ChartTooltip } from "@/modules/shared/ui";
+import { Label, Pie, PieChart } from "recharts";
 import type { Account, Fund } from "@/modules/funds/interfaces";
+import { EmptyState } from "@/modules/shared/components";
 import { useLocalization } from "@/modules/shared/hooks";
+import { ChartContainer, ChartTooltip } from "@/modules/shared/ui";
 
 interface BalanceChartProps {
   account: Account;

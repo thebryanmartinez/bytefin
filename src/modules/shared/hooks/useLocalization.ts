@@ -1,4 +1,4 @@
-import locales from "@/modules/shared/localization/en.json";
+import enLocale from "@/modules/shared/localization/en.json";
 
 type NestedKey<T> = T extends object
   ? {
@@ -8,12 +8,12 @@ type NestedKey<T> = T extends object
     }[keyof T]
   : never;
 
-type LocalizationKey = NestedKey<typeof locales>;
+type LocalizationKey = NestedKey<typeof enLocale>;
 
 export const useLocalization = () => {
   const t = (key: LocalizationKey): string => {
     const keys = key.split(".");
-    let value: any = locales;
+    let value: any = enLocale;
 
     for (const k of keys) {
       value = value?.[k];

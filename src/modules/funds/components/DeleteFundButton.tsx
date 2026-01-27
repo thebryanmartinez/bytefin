@@ -1,8 +1,8 @@
 import type { Id } from "@convex/_generated/dataModel";
 import { Check, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
-import { Button } from "@/modules/shared/ui";
 import type { FundsProps } from "@/modules/funds/interfaces";
+import { Button } from "@/modules/shared/ui";
 
 interface DeleteFundButtonProps {
   id: Id<"funds">;

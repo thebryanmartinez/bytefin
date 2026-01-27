@@ -1,23 +1,22 @@
 "use client";
 
+import { Controller } from "react-hook-form";
+import type * as z from "zod";
+import type { addFundSchema } from "@/modules/funds/forms";
+import { useAddFund } from "@/modules/funds/hooks";
+import { useDialog, useLocalization } from "@/modules/shared/hooks";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  Button,
-  Input,
   Field,
   FieldError,
   FieldLabel,
+  Input,
 } from "@/modules/shared/ui";
-import { useLocalization } from "@/modules/shared/hooks";
-import * as z from "zod";
-import { Controller } from "react-hook-form";
-import { useDialog } from "@/modules/shared/hooks";
-import { useAddFund } from "@/modules/funds/hooks";
-import type { addFundSchema } from "@/modules/funds/forms";
 
 interface AddFundDialogProps {
   addFund: (fundName: string) => void;

@@ -4,10 +4,10 @@ import {
   AddTransactionDialog,
   DeleteFundButton,
 } from "@/modules/funds/components";
-import { EmptyState } from "@/modules/shared/components";
-import { Card, CardContent } from "@/modules/shared/ui";
-import { useLocalization } from "@/modules/shared/hooks";
 import type { FundsProps } from "@/modules/funds/interfaces";
+import { EmptyState } from "@/modules/shared/components";
+import { useLocalization } from "@/modules/shared/hooks";
+import { Card, CardContent } from "@/modules/shared/ui";
 
 export const Funds = ({
   funds,
@@ -57,7 +57,6 @@ export const Funds = ({
                         updateFundBalance={updateFundBalance}
                         updateAccountBalance={updateAccountBalance}
                         currentBalance={fund.balance}
-                        t={t}
                       />
                     </div>
                   </div>
