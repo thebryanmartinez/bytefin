@@ -1,10 +1,8 @@
 "use client";
 
 import type { Id } from "@convex/_generated/dataModel";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus } from "lucide-react";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import * as z from "zod";
 import {
   Button,
