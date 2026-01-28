@@ -9,7 +9,6 @@
  */
 
 import type * as accounts from "../accounts.js";
-import type * as accountsFunctions from "../accountsFunctions.js";
 import type * as funds from "../funds.js";
 
 import type {
@@ -20,7 +19,6 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   accounts: typeof accounts;
-  accountsFunctions: typeof accountsFunctions;
   funds: typeof funds;
 }>;
 

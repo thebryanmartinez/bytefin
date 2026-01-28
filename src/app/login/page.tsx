@@ -1,6 +1,6 @@
 "use client";
 
-import { PINLogin } from "@/components/modules/PINLogin";
+import { PINLogin } from "@/modules/authentication/components";
 
 export default function LoginPage() {
   return <PINLogin />;

@@ -1,0 +1,114 @@
+"use client";
+
+import { PieChart as PieChartIcon } from "lucide-react";
+import { Label, Pie, PieChart } from "recharts";
+import type { Account, Fund } from "@/modules/funds/interfaces";
+import { EmptyState } from "@/modules/shared/components";
+import { useLocalization } from "@/modules/shared/hooks";
+import { ChartContainer, ChartTooltip } from "@/modules/shared/ui";
+
+interface BalanceChartProps {
+  account: Account;
+  funds: Fund[];
+}
+
+const COLORS = [
+  "var(--chart-0)",
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
+  "var(--chart-5)",
+  "var(--chart-6)",
+  "var(--chart-7)",
+];
+
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    const data = payload[0];
+    return (
+      <div className="border-border bg-background grid min-w-24 items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-shadow">
+        <div className="text-center flex flex-col items-center">
+          <span className="text-muted-foreground font-bold">{data.name}</span>
+          <span className="text-foreground font-mono font-medium tabular-nums">
+            {data.value.toLocaleString("en-US", {
+              style: "currency",
+              currency: "USD",
+            })}
+          </span>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+export const BalanceChart = ({ account, funds }: BalanceChartProps) => {
+  const { t } = useLocalization();
+
+  const chartData = funds.map((fund, index) => ({
+    name: fund.name,
+    value: fund.balance,
+    fill: COLORS[index % COLORS.length],
+  }));
+
+  return (
+    <section className="w-full ">
+      {funds.length === 0 ? (
+        <EmptyState
+          icon={PieChartIcon}
+          title={t("balanceChart.noFundsYet")}
+          description={t("balanceChart.noFundsDescription")}
+        />
+      ) : account.balance === 0 ? (
+        <EmptyState
+          icon={PieChartIcon}
+          title={t("balanceChart.noTransactionsYet")}
+          description={t("balanceChart.noTransactionsDescription")}
+        />
+      ) : (
+        <ChartContainer
+          className="mx-auto aspect-square max-h-[250px]"
+          config={{}}
+        >
+          <PieChart>
+            <ChartTooltip cursor={false} content={<CustomTooltip />} />
+            <Pie
+              data={chartData}
+              dataKey="value"
+              nameKey="name"
+              innerRadius={60}
+              strokeWidth={5}
+            >
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                    return (
+                      <text
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                      >
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className="fill-foreground text-lg font-bold"
+                        >
+                          {account.balance.toLocaleString("en-US", {
+                            style: "currency",
+                            currency: "USD",
+                          })}
+                        </tspan>
+                      </text>
+                    );
+                  }
+                }}
+              />
+            </Pie>
+          </PieChart>
+        </ChartContainer>
+      )}
+    </section>
+  );
+};
