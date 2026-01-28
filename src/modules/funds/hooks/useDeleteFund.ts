@@ -1,10 +1,5 @@
 import { useRef, useState } from "react";
-import type { FundsProps } from "@/modules/funds/interfaces";
-
-type DeleteFundProps = {
-  id: string;
-  deleteFund: FundsProps["deleteFund"];
-};
+import type { DeleteFundProps } from "@/modules/funds/interfaces";
 
 export const useDeleteFund = ({ id, deleteFund }: DeleteFundProps) => {
   const [isPending, setIsPending] = useState(false);

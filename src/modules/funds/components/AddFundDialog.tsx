@@ -1,8 +1,7 @@
 "use client";
 
 import { Controller } from "react-hook-form";
-import type * as z from "zod";
-import type { addFundSchema } from "@/modules/funds/forms";
+import type { AddFundSchemaProps } from "@/modules/funds/forms";
 import { useAddFund } from "@/modules/funds/hooks";
 import { useDialog, useLocalization } from "@/modules/shared/hooks";
 import {
@@ -27,7 +26,7 @@ export const AddFundDialog = ({ addFund }: AddFundDialogProps) => {
   const { isOpen, handleClose, handleOpenChange } = useDialog();
   const { addFundForm, isFormDisabled } = useAddFund(t);
 
-  const handleAddFund = (data: z.infer<typeof addFundSchema>) => {
+  const handleAddFund = (data: AddFundSchemaProps) => {
     addFund(data.fundName);
     handleClose(addFundForm.reset);
   };

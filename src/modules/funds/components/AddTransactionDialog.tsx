@@ -3,8 +3,7 @@
 import type { Id } from "@convex/_generated/dataModel";
 import { Plus } from "lucide-react";
 import { Controller } from "react-hook-form";
-import type * as z from "zod";
-import type { addTransactionSchema } from "@/modules/funds/forms";
+import type { AddTransactionSchemaProps } from "@/modules/funds/forms";
 import { useAddTransaction } from "@/modules/funds/hooks";
 import type { FundsProps } from "@/modules/funds/interfaces";
 import { useDialog, useLocalization } from "@/modules/shared/hooks";
@@ -40,9 +39,7 @@ export const AddTransactionDialog = ({
   const { addTransactionForm, isFormDisabled } = useAddTransaction(t);
   const { isOpen, handleClose, handleOpenChange } = useDialog();
 
-  const handleUpdateBalance = async (
-    data: z.infer<typeof addTransactionSchema>,
-  ) => {
+  const handleUpdateBalance = async (data: AddTransactionSchemaProps) => {
     try {
       updateFundBalance(fundId, currentBalance, data.amount);
       updateAccountBalance(account._id, account.balance, data.amount);

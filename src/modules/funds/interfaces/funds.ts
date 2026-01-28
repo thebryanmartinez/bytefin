@@ -17,3 +17,8 @@ export type FundsProps = {
     amount: number,
   ) => void;
 };
+
+export type DeleteFundProps = {
+  id: Id<"funds">;
+  deleteFund: FundsProps["deleteFund"];
+};
