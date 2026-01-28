@@ -1,9 +1,6 @@
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
-
-export const getNewBalance = (currentBalance: number, amount: number) => {
-  return currentBalance + amount;
-};
+import { getNewBalance } from "../src/modules/shared/utils";
 
 export const get = query({
   args: {},
