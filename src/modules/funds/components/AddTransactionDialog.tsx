@@ -20,7 +20,7 @@ import {
   Input,
 } from "@/modules/shared/ui";
 
-interface AddTransactionDialogProps {
+export interface AddTransactionDialogProps {
   fundId: Id<"funds">;
   account: FundsProps["account"];
   updateFundBalance: FundsProps["updateFundBalance"];

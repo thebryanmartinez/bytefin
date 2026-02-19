@@ -1,4 +1,4 @@
-import { queryByRole, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeAll, describe, expect, test } from "vitest";
 import AddFundDialog from "./AddFundDialog";
@@ -10,7 +10,7 @@ describe("AddFundDialog", () => {
 
   test("Add Fund dialog trigger is rendered", () => {
     const addFundButton = screen.getByRole("button", { name: /add fund/i });
-    expect(addFundButton).toBeDefined();
+    expect(addFundButton).toBeVisible();
   });
 
   test("Dialog is opened", async () => {
@@ -33,8 +33,9 @@ describe("AddFundDialog", () => {
       name: /add new fund/i,
     });
     const fundNameInput = screen.getByRole("textbox", { name: /fund name/i });
-    expect(dialogTitle).toBeDefined();
-    expect(fundNameInput).toBeDefined();
+    expect(dialogTitle).toBeVisible();
+    expect(fundNameInput).toBeVisible();
+    expect(fundNameInput).toBeEnabled();
   });
 
   test("Dialog is closed after being opened with Cancel button", async () => {
@@ -46,11 +47,11 @@ describe("AddFundDialog", () => {
 
     // Asset dialog is open
     const dialog = screen.getByRole("dialog");
-    expect(dialog).toBeDefined();
+    expect(dialog).toBeVisible();
 
     // Click cancel button
     const cancelButton = screen.getByRole("button", { name: /cancel/i });
-    expect(cancelButton).toBeDefined();
+    expect(cancelButton).toBeVisible();
     await user.click(cancelButton);
 
     // Assert dialog is closed
@@ -67,11 +68,11 @@ describe("AddFundDialog", () => {
 
     // Asset dialog is open
     const dialog = screen.getByRole("dialog");
-    expect(dialog).toBeDefined();
+    expect(dialog).toBeVisible();
 
     // Click close button
     const closeButton = screen.getByRole("button", { name: /close/i });
-    expect(closeButton).toBeDefined();
+    expect(closeButton).toBeVisible();
     await user.click(closeButton);
 
     // Assert dialog is closed
