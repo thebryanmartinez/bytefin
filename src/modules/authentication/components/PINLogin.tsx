@@ -2,7 +2,7 @@
 
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/modules/authentication/hooks";
 
 export const PINLogin = () => {
@@ -24,13 +24,13 @@ export const PINLogin = () => {
     setError("");
   };
 
-  const handleEnter = async () => {
-    if (pin.length === 4) {
+  const submitPin = async (pinValue: string) => {
+    if (pinValue.length === 4) {
       setIsLoading(true);
       setError("");
 
       try {
-        const success = await login(pin);
+        const success = await login(pinValue);
 
         if (success) {
           router.push("/");
@@ -49,6 +49,39 @@ export const PINLogin = () => {
       setError("Please enter 4 digits");
     }
   };
+
+  const handleEnter = () => submitPin(pin);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (isLoading) return;
+
+      if (e.key >= "0" && e.key <= "9") {
+        e.preventDefault();
+        if (pin.length < 4) {
+          const newPin = pin + e.key;
+          setPin(newPin);
+          setError("");
+          if (newPin.length === 4) {
+            submitPin(newPin);
+          }
+        }
+      } else if (e.key === "Backspace") {
+        e.preventDefault();
+        setPin((prev) => prev.slice(0, -1));
+        setError("");
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        handleClear();
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        submitPin(pin);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [pin, isLoading]);
 
   const renderKeypad = () => {
     const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
