@@ -5,7 +5,14 @@ import { Label, Pie, PieChart } from "recharts";
 import type { Account, Fund } from "@/modules/funds/interfaces";
 import { EmptyState } from "@/modules/shared/components";
 import { useLocalization } from "@/modules/shared/hooks";
-import { ChartContainer, ChartTooltip } from "@/modules/shared/ui";
+import {
+  ChartContainer,
+  ChartTooltip,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/modules/shared/ui";
 
 interface BalanceChartProps {
   account: Account;
@@ -23,24 +30,51 @@ const COLORS = [
   "var(--chart-7)",
 ];
 
-const CustomTooltip = ({ active, payload }: any) => {
-  if (active && payload && payload.length) {
-    const data = payload[0];
-    return (
-      <div className="border-border bg-background grid min-w-24 items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-shadow">
-        <div className="text-center flex flex-col items-center">
-          <span className="text-muted-foreground font-bold">{data.name}</span>
-          <span className="text-foreground font-mono font-medium tabular-nums">
-            {data.value.toLocaleString("en-US", {
-              style: "currency",
-              currency: "USD",
-            })}
-          </span>
-        </div>
-      </div>
-    );
-  }
-  return null;
+interface BalanceChartTooltipPayload {
+  name?: string;
+  value?: number;
+}
+
+interface BalanceChartTooltipProps {
+  active?: boolean;
+  coordinate?: {
+    x?: number;
+    y?: number;
+  };
+  payload?: BalanceChartTooltipPayload[];
+}
+
+const BalanceChartTooltip = ({
+  active,
+  coordinate,
+  payload,
+}: BalanceChartTooltipProps) => {
+  const data = payload?.[0];
+  const formattedValue = (data?.value ?? 0).toLocaleString("en-US", {
+    style: "currency",
+    currency: "USD",
+  });
+
+  return (
+    <TooltipProvider>
+      <Tooltip open={Boolean(active && data)}>
+        <TooltipTrigger asChild>
+          <span
+            className="pointer-events-none absolute block size-1"
+            style={{
+              left: coordinate?.x ?? 0,
+              top: coordinate?.y ?? 0,
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+        </TooltipTrigger>
+        <TooltipContent side="top" align="center" className="text-center">
+          <span className="block font-heading">{data?.name}</span>
+          <span className="block font-mono tabular-nums">{formattedValue}</span>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
 };
 
 export const BalanceChart = ({ account, funds }: BalanceChartProps) => {
@@ -68,11 +102,15 @@ export const BalanceChart = ({ account, funds }: BalanceChartProps) => {
         />
       ) : (
         <ChartContainer
-          className="mx-auto aspect-square max-h-[250px]"
+          className="relative mx-auto aspect-square max-h-[250px]"
           config={{}}
         >
           <PieChart>
-            <ChartTooltip cursor={false} content={<CustomTooltip />} />
+            <ChartTooltip
+              cursor={false}
+              position={{ x: 0, y: 0 }}
+              content={<BalanceChartTooltip />}
+            />
             <Pie
               data={chartData}
               dataKey="value"

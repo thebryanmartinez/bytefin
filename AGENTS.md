@@ -1,0 +1,1 @@
+Bytefin is a application for managing and separating my saving accounts and divided into my multiple goals, tracking every dollar inside my savings account. The application is a web app made with Next.js, TailwindCSS and Shadcn, with the database in Convex. The application supports both desktop and mobile views, but it's mainly used in mobile view.
