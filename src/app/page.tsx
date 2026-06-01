@@ -61,7 +61,7 @@ export default function Home() {
           </div>
         ) : (
           <>
-            <Header />
+            <Header balance={accounts[0].balance} />
             <BalanceChart account={accounts[0]} funds={funds} />
             <Funds
               funds={funds}
