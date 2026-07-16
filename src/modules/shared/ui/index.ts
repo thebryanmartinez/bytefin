@@ -9,4 +9,5 @@ export * from "./input";
 export * from "./label";
 export * from "./separator";
 export * from "./spinner";
+export * from "./tabs";
 export * from "./tooltip";
