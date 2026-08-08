@@ -3,7 +3,10 @@
 import type { Id } from "@convex/_generated/dataModel";
 import { Plus } from "lucide-react";
 import { Controller } from "react-hook-form";
-import type { AddTransactionSchemaProps } from "@/modules/funds/forms";
+import type {
+  AddTransactionSchemaProps,
+  TransactionType,
+} from "@/modules/funds/forms";
 import { useAddTransaction } from "@/modules/funds/hooks";
 import type { FundsProps } from "@/modules/funds/interfaces";
 import { useDialog, useLocalization } from "@/modules/shared/hooks";
@@ -18,6 +21,9 @@ import {
   FieldError,
   FieldLabel,
   Input,
+  Tabs,
+  TabsList,
+  TabsTrigger,
 } from "@/modules/shared/ui";
 
 interface AddTransactionDialogProps {
@@ -36,14 +42,23 @@ export const AddTransactionDialog = ({
   updateAccountBalance,
 }: AddTransactionDialogProps) => {
   const { t } = useLocalization();
-  const { addTransactionForm, isFormDisabled } = useAddTransaction(t);
+  const {
+    addTransactionForm,
+    isFormDisabled,
+    transactionType,
+    handleTransactionTypeChange,
+  } = useAddTransaction(t, currentBalance);
   const { isOpen, handleClose, handleOpenChange } = useDialog();
+
+  const resetTransaction = () => handleTransactionTypeChange("deposit");
 
   const handleUpdateBalance = async (data: AddTransactionSchemaProps) => {
     try {
-      updateFundBalance(fundId, currentBalance, data.amount);
-      updateAccountBalance(account._id, account.balance, data.amount);
-      handleClose(addTransactionForm.reset);
+      const signedAmount =
+        transactionType === "withdraw" ? -data.amount : data.amount;
+      updateFundBalance(fundId, currentBalance, signedAmount);
+      updateAccountBalance(account._id, account.balance, signedAmount);
+      handleClose(resetTransaction);
     } catch (error) {
       console.error(error);
     }
@@ -52,7 +67,7 @@ export const AddTransactionDialog = ({
   return (
     <Dialog
       open={isOpen}
-      onOpenChange={() => handleOpenChange(!isOpen, addTransactionForm.reset)}
+      onOpenChange={() => handleOpenChange(!isOpen, resetTransaction)}
     >
       <DialogTrigger asChild>
         <Button variant="neutral" size="sm">
@@ -64,6 +79,27 @@ export const AddTransactionDialog = ({
         <DialogHeader>
           <DialogTitle>{t("funds.addTransactionTitle")}</DialogTitle>
         </DialogHeader>
+        <Tabs
+          value={transactionType}
+          onValueChange={(value) =>
+            handleTransactionTypeChange(value as TransactionType)
+          }
+        >
+          <TabsList className="grid w-full grid-cols-2 gap-0 p-0 overflow-hidden">
+            <TabsTrigger
+              value="deposit"
+              className="h-full w-full rounded-none border-0 data-[state=inactive]:bg-secondary-background"
+            >
+              {t("funds.deposit")}
+            </TabsTrigger>
+            <TabsTrigger
+              value="withdraw"
+              className="h-full w-full rounded-none border-0 data-[state=inactive]:bg-secondary-background"
+            >
+              {t("funds.withdraw")}
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
         <form
           className="space-y-4 pt-4"
           id="form-add-transaction"
@@ -100,7 +136,7 @@ export const AddTransactionDialog = ({
           <div className="flex justify-end space-x-2 pt-4">
             <Button
               variant="neutral"
-              onClick={() => handleClose(addTransactionForm.reset)}
+              onClick={() => handleClose(resetTransaction)}
             >
               {t("common.cancel")}
             </Button>
@@ -109,7 +145,9 @@ export const AddTransactionDialog = ({
               form="form-add-transaction"
               disabled={isFormDisabled}
             >
-              {t("funds.addTransaction")}
+              {transactionType === "withdraw"
+                ? t("funds.withdraw")
+                : t("funds.deposit")}
             </Button>
           </div>
         </form>
